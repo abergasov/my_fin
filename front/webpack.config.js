@@ -14,7 +14,7 @@ module.exports = (env = {}) => ({
     app: './app.ts'
   },
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "public_html"),
     filename: "[name].[hash:6].bundle.js",
     publicPath: process.env.BASE_URL,
   },
