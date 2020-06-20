@@ -1,41 +1,58 @@
 <template>
   <div>
-    <div id="nav">
-      <router-link to="/">Home</router-link>
-      <router-link to="/about">About</router-link>
-    </div>
+    <router-link to="/">
+      Home
+    </router-link> | <router-link to="/medium">
+      Medium
+    </router-link>
     <router-view />
+
+      <v-row align="center">
+        <v-col class="text-center" cols="12" sm="4">
+          <div class="my-2">
+            <v-btn text small>Normal</v-btn>
+          </div>
+          <div class="my-2">
+            <v-btn text small color="primary">Primary</v-btn>
+          </div>
+          <div class="my-2">
+            <v-btn text small color="error">Error</v-btn>
+          </div>
+          <div class="my-2">
+            <v-btn text small disabled>Disabled</v-btn>
+          </div>
+        </v-col>
+
+        <v-col class="text-center" cols="12" sm="4">
+          <div class="my-2">
+            <v-btn text>Normal</v-btn>
+          </div>
+          <div class="my-2">
+            <v-btn text color="primary">Primary</v-btn>
+          </div>
+          <div class="my-2">
+            <v-btn text color="error">Error</v-btn>
+          </div>
+          <div class="my-2">
+            <v-btn text disabled>Disabled</v-btn>
+          </div>
+        </v-col>
+
+        <v-col class="text-center" cols="12" sm="4">
+          <div class="my-2">
+            <v-btn text large>Normal</v-btn>
+          </div>
+          <div class="my-2">
+            <v-btn text large color="primary">Primary</v-btn>
+          </div>
+          <div class="my-2">
+            <v-btn text large color="error">Error</v-btn>
+          </div>
+          <div class="my-2">
+            <v-btn text large disabled>Disabled</v-btn>
+          </div>
+        </v-col>
+      </v-row>
+
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from 'vue';
-
-export default defineComponent({
-  name: "App",
-});
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  padding: 0 8px;
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
