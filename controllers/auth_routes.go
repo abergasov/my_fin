@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"time"
 )
@@ -27,6 +28,7 @@ func (ar *AppRouter) Login(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
 		return
 	}
+	bcrypt.GenerateFromPassword([]byte(user.Password), 8)
 	//compare the user from the request, with the one we defined:
 	if user.Username != u.Username || user.Password != u.Password {
 		c.JSON(http.StatusUnauthorized, "Please provide valid login details")
