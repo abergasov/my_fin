@@ -7,10 +7,6 @@ const helpers              = require('./helpers');
 const isDev                = process.env.NODE_ENV === 'development';
 const Dotenv               = require('dotenv-webpack');
 
-console.log(process.env.TITLE);
-console.log(process.env.TITLE);
-console.log(process.env.TITLE);
-
 const webpackConfig = {
     entry: {
         polyfill: '@babel/polyfill',

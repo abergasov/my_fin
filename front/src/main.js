@@ -9,6 +9,12 @@ import vuetify from '@/plugins/vuetify' // path to vuetify export
 Vue.use(VueRouter);
 
 
+Vue.prototype.askBackend = function (param) {
+    let domain = process.env.BACK_SERVER;
+    console.log('ask smth!')
+    console.log(domain, param);
+};
+
 // Configure router
 const router = new VueRouter({
     routes,
