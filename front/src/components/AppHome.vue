@@ -10,7 +10,6 @@
 export default {
     name: 'AppHome',
     created() {
-      this.askBackend('asd');
     }
 };
 </script>
