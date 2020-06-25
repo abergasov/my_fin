@@ -44,8 +44,6 @@
                 <v-btn color="success" class="mr-4" @click="updateCategories">{{ $t('update') }}</v-btn>
             </v-row>
         </v-card>
-        <v-snackbar v-if="update_ok" :value="true" bottom color="success" outlined right>{{ $t('categories_updated') }}</v-snackbar>
-        <v-snackbar v-if="update_wrong" :value="true" bottom color="error" outlined right>{{ $t('categories_updated_error') }}</v-snackbar>
     </v-form>
 </template>
 
@@ -57,8 +55,6 @@
                 snackbar: true,
                 editMode: false,
                 categories_copy: [],
-                update_ok: false,
-                update_wrong: false,
             }
         },
         created() {
@@ -103,16 +99,13 @@
                         if (data.ok) {
                             this.$store.commit('setCategories', data.categories || []);
                             this.categories_copy = data.categories;
-                            this.update_ok = true;
-                            setTimeout(() => {
-                                this.update_ok = false;
-                            }, 5000);
-                        } else {
-                            this.update_wrong = true;
-                            setTimeout(() => {
-                                this.update_wrong = false;
-                            }, 5000);
                         }
+                        this.$store.commit('setAlert', {
+                            display: true,
+                            text: (data.ok ?  this.$t('categories_updated') : this.$t('categories_updated_error')),
+                            color: (data.ok ? 'success' : 'error'),
+                            delay: 5,
+                        });
                         this.editMode = false;
                     })
             },
