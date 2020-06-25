@@ -25,14 +25,9 @@
       </template>
     </v-navigation-drawer>
     <v-app-bar id="app-bar" absolute app color="transparent" flat height="75">
-      <v-btn class="mr-3" elevation="1" fab small @click="miniVariant = !miniVariant">
-        <v-icon v-if="!miniVariant">mdi-view-quilt</v-icon>
-        <v-icon v-else>mdi-dots-vertical</v-icon>
-      </v-btn>
-
+      <v-app-bar-nav-icon @click="miniVariant = !miniVariant"></v-app-bar-nav-icon>
       <v-toolbar-title class="hidden-sm-and-down font-weight-light" v-text="$route.name"/>
       <v-spacer />
-
       <v-text-field :label="$t('search')" color="secondary" hide-details style="max-width: 165px;">
         <template v-if="$vuetify.breakpoint.mdAndUp" v-slot:append-outer>
           <v-btn class="mt-n2" elevation="1" fab small>
@@ -94,6 +89,12 @@
           </v-container>
         </v-footer>
       </v-container>
+      <v-snackbar v-if="alertData.display"
+                  :value="true"
+                  bottom
+                  :color="alertData.color"
+                  outlined
+                  right>{{ alertData.text }}</v-snackbar>
     </v-main>
   </v-app>
 </template>
@@ -122,11 +123,38 @@
       }
     },
     computed: {
-
+      alertData() {
+        return this.$store.state.alertData;
+      }
+    },
+    created() {
+      this.getUserCategories();
     },
     methods: {
       logout() {
         console.log('logout');
+      },
+
+      showAlertR: function(color, text, timeout) {
+        this.alertText = text;
+        this.alertColor = color;
+        this.alertDisplay = true;
+        setTimeout(() => {
+          this.alertDisplay = false;
+        }, +timeout * 1000);
+      },
+
+      getUserCategories() {
+        if (this.$store.categories) {
+          //return;
+        }
+        this.askBackend('user_category/get', {})
+                .then(({data}) => {
+                  if (data.ok) {
+                    this.$store.commit('setCategories', data.categories || []);
+                  }
+                })
+                .catch()
       }
     }
   }

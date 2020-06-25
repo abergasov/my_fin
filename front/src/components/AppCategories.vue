@@ -122,16 +122,8 @@
             },
             getUserCategories() {
                 if (this.$store.categories) {
-                    return;
+                    this.categories_copy = this.$store.categories;
                 }
-                this.askBackend('user_category/get', {})
-                    .then(({data}) => {
-                        if (data.ok) {
-                            this.$store.commit('setCategories', data.categories || []);
-                            this.categories_copy = data.categories;
-                        }
-                    })
-                    .catch()
             }
         }
     }

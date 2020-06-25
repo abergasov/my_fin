@@ -32,12 +32,12 @@ func (cr *CategoryRepository) LoadCategories(userId int64) (uCat []Category) {
 }
 
 func (cr *CategoryRepository) UpdateCategories(userId int64, payload *[]Category) bool {
-	sql := "INSERT INTO user_category (u_id, categories) VALUES (?, ?) ON DUPLICATE KEY UPDATE categories = ?"
+	sqlR := "INSERT INTO user_category (u_id, categories) VALUES (?, ?) ON DUPLICATE KEY UPDATE categories = ?"
 	str, err := json.Marshal(payload)
 	if err != nil {
 		return false
 	}
-	_, e := cr.db.Exec(sql, userId, str, str)
+	_, e := cr.db.Exec(sqlR, userId, str, str)
 	if e != nil {
 		return false
 	}

@@ -7,6 +7,17 @@
   "categories_updated": "Categories updated",
   "categories_updated_error": "Error while categories updated",
 
+  "add_expense": "Add expense",
+  "add_income": "Add income",
+  "capital_change": "Capital change",
+  "capital_change_add": "Add",
+  "select_expense": "Select expense",
+  "amount": "Amount",
+  "commentary": "Commentary",
+  "add": "Add",
+  "added": "Added",
+  "not_added": "Error while adding",
+
 
 
   "avatar": "Vuetify MD",
