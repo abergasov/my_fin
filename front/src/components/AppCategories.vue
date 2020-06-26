@@ -4,13 +4,13 @@
             <v-toolbar flat>
                 <v-toolbar-title class="font-weight-light">{{ $t('category') }}</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn v-if="editMode" color="error" class="cancel_top" fab small @click="cancelChanges">
+                <v-btn v-if="false && editMode" color="error" class="cancel_top" fab small @click="cancelChanges">
                     <v-icon>mdi-close-octagon-outline</v-icon>
                 </v-btn>
                 <v-btn v-if="editMode" color="success" fab small @click="addRootCategory">
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
-                <v-btn v-else color="info" fab small @click="editMode = !editMode">
+                <v-btn v-else color="info" fab small @click="startEdit">
                     <v-icon>mdi-pencil</v-icon>
                 </v-btn>
             </v-toolbar>
@@ -28,7 +28,7 @@
                 </div>
             </v-card>
             <v-list v-else>
-                <v-list-group v-for="c in categories_copy" no-action sub-group value="true" :key="c.id">
+                <v-list-group v-for="c in categories" no-action sub-group value="true" :key="c.id">
                     <template v-slot:activator>
                         <v-list-item-content>
                             <v-list-item-title>{{ c.title }}</v-list-item-title>
@@ -60,7 +60,16 @@
         created() {
             this.getUserCategories();
         },
+        computed: {
+            categories() {
+                return this.$store.state.categories;
+            }
+        },
         methods: {
+            startEdit() {
+                this.categories_copy = this.$store.state.categories;
+                this.editMode = !this.editMode
+            },
             remove(id, parentID) {
                 if (parentID) {
                     let i = this.categories_copy.findIndex(c => c.id === parentID);

@@ -109,7 +109,6 @@ export default {
             delay: 2,
           });
         });
-        //todo it
         this.closeAdd();
       }
     }
