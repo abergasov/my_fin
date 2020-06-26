@@ -5,22 +5,15 @@
         <v-card-title class="headline">{{ $t('capital_change') }}</v-card-title>
         <v-card-actions>
           <ul class="actions_list">
-            <li><v-btn @click="addIncome" x-large color="success" block dark>{{ $t('add_income') }}</v-btn></li>
-            <li><v-btn @click="addExpense" x-large color="error" block dark>{{ $t('add_expense') }}</v-btn></li>
+            <li><v-btn @click="addIncome" x-large color="success" block>{{ $t('add_income') }}</v-btn></li>
+            <li><v-btn @click="addExpense" x-large color="error" block>{{ $t('add_expense') }}</v-btn></li>
+            <li><v-btn @click="addExpense" x-large color="info" block>{{ $t('add_active') }}</v-btn></li>
           </ul>
         </v-card-actions>
       </v-card>
     </v-col>
     <v-col cols="12" sm="12" md="4" lg="3">
-      <v-card outlined>
-      <v-card-title class="headline">{{ $t('changes') }}</v-card-title>
-      <v-card-actions>
-        <ul class="actions_list">
-          <li><v-btn @click="addIncome" x-large color="success" block dark>{{ $t('add_income') }}</v-btn></li>
-          <li><v-btn @click="addExpense" x-large color="error" block dark>{{ $t('add_expense') }}</v-btn></li>
-        </ul>
-      </v-card-actions>
-    </v-card>
+
     </v-col>
     <div>
       <router-link to="/">Home</router-link> |
@@ -73,6 +66,7 @@ export default {
         dialog: false,
         incoming: false,
         expense: false,
+        asset: false,
         category: null,
         amount: '',
         commentary: '',
@@ -98,10 +92,15 @@ export default {
         this.dialog = true;
         this.expense = true;
       },
+      addAsset() {
+        this.dialog = true;
+        this.asset = true;
+      },
       closeAdd() {
         this.dialog = false;
         this.incoming = false;
         this.expense = false;
+        this.asset = false;
         this.category = null;
         this.amount = '';
         this.commentary = '';
@@ -134,7 +133,7 @@ export default {
       list-style: none;
       width: 100%;
       padding-left: 0;
-      li:last-child {
+      li:not(:first-child) {
         margin-top: 10px;
       }
     }

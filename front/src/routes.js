@@ -5,7 +5,7 @@ const AppCategories = () => import('@/components/AppCategories');
 const routes = [
     {
         path: '/',
-        name: 'Home',
+        name: 'home',
         component: AppHome
     },
     {

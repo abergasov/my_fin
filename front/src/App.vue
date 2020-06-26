@@ -14,7 +14,7 @@
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title>{{ $t(item.title) }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -26,7 +26,7 @@
     </v-navigation-drawer>
     <v-app-bar id="app-bar" absolute app color="transparent" flat height="75">
       <v-app-bar-nav-icon @click="miniVariant = !miniVariant"></v-app-bar-nav-icon>
-      <v-toolbar-title class="hidden-sm-and-down font-weight-light" v-text="$route.name"/>
+      <v-toolbar-title class="hidden-sm-and-down font-weight-light" v-text="$t($route.name)"/>
       <v-spacer />
       <v-text-field :label="$t('search')" color="secondary" hide-details style="max-width: 165px;">
         <template v-if="$vuetify.breakpoint.mdAndUp" v-slot:append-outer>
@@ -111,10 +111,10 @@
         drawer: true,
         value: true,
         items: [
-          { title: 'Dashboard', icon: 'mdi-view-dashboard', link: '/' },
-          { title: 'Statistic', icon: 'mdi-chart-areaspline', link: '/statistic' },
-          { title: 'Categories', icon: 'mdi-format-list-bulleted-square', link: '/categories'},
-          { title: 'Profile', icon: 'mdi-account-box', link: '/profile'},
+          { title: 'dashboard', icon: 'mdi-view-dashboard', link: '/' },
+          { title: 'statistic', icon: 'mdi-chart-areaspline', link: '/statistic' },
+          { title: 'categories', icon: 'mdi-format-list-bulleted-square', link: '/categories'},
+          { title: 'profile', icon: 'mdi-account-box', link: '/profile'},
         ],
         notifications: [
           'Mike John Responded to your email',

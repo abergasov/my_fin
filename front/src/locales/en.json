@@ -17,5 +17,11 @@
   "add": "Add",
   "added": "Added",
   "not_added": "Error while adding",
+  "add_active": "Add Asset",
+  "dashboard": "Dashboard",
+  "statistic": "Statistic",
+  "categories": "Categories",
+  "profile": "Profile",
+  "home": "Home",
   "changes": "Last changes"
 }
