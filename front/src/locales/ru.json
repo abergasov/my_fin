@@ -1,0 +1,23 @@
+{
+  "category": "Текущие категории",
+  "new_category_name": "Имя новой категории",
+  "new_sub_category_name": "Имя новой подкатегории",
+  "update": "Обновить",
+  "cancel": "Отмена",
+  "categories_updated": "Категории обновлены",
+  "categories_updated_error": "Ошибка во время обновленя категорий",
+
+  "add_expense": "Добавить расход",
+  "add_income": "Добавить приход",
+  "capital_change": "Изменения капитала",
+  "capital_change_add": "Добавить",
+  "select_expense": "Выбрать расход",
+  "amount": "Значение",
+  "commentary": "Комментарий",
+  "add": "Добавить",
+  "search": "Добавить",
+  "added": "Добавлено",
+  "badge": "фывф",
+  "not_added": "Ошибка добавления",
+  "changes": "Последние изменения"
+}

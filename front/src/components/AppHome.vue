@@ -11,6 +11,17 @@
         </v-card-actions>
       </v-card>
     </v-col>
+    <v-col cols="12" sm="12" md="4" lg="3">
+      <v-card outlined>
+      <v-card-title class="headline">{{ $t('changes') }}</v-card-title>
+      <v-card-actions>
+        <ul class="actions_list">
+          <li><v-btn @click="addIncome" x-large color="success" block dark>{{ $t('add_income') }}</v-btn></li>
+          <li><v-btn @click="addExpense" x-large color="error" block dark>{{ $t('add_expense') }}</v-btn></li>
+        </ul>
+      </v-card-actions>
+    </v-card>
+    </v-col>
     <div>
       <router-link to="/">Home</router-link> |
       <router-link to="/medium">Medium</router-link>
