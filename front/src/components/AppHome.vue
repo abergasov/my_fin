@@ -106,10 +106,16 @@ export default {
         this.commentary = '';
       },
       saveAdd() {
+        let type = 'E';
+        if (this.incoming) {
+          type = 'I';
+        } else if (this.asset) {
+          type = 'I';
+        }
         this.askBackend('expense/add', {
           cat: +this.category,
           amount: +this.amount,
-          incoming: +this.incoming,
+          incoming: type,
           commentary: this.commentary,
         }).then(({data}) => {
           this.$store.commit('setAlert', {

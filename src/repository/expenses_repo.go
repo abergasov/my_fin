@@ -7,7 +7,7 @@ import (
 type Expense struct {
 	Category   int64   `json:"cat"`
 	Amount     float64 `json:"amount"`
-	Incoming   int64   `json:"incoming"`
+	Incoming   string  `json:"incoming"`
 	Commentary string  `json:"commentary"`
 }
 
