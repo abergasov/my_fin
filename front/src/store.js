@@ -6,6 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         categories: null,
+        expenses: [],
         alertData: {
             display: false,
             text: '',
@@ -14,6 +15,9 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
+        setExpenses (state, payload) {
+            state.expenses = payload;
+        },
         setCategories (state, payload) {
             state.categories = payload;
         },

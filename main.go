@@ -22,5 +22,6 @@ func main() {
 	router.GinEngine.POST("/api/user_category/get", router.UserCategories)
 	router.GinEngine.POST("/api/user_category/update", router.UpdateUserCategories)
 	router.GinEngine.POST("/api/expense/add", router.AddExpense)
+	router.GinEngine.POST("/api/expense/list", router.GetExpense)
 	log.Fatal(router.GinEngine.Run(":8080"))
 }

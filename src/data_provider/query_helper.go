@@ -22,11 +22,7 @@ func InitConnection(conf *config.AppConfig) (*DBAdapter, error) {
 }
 
 func (d *DBAdapter) SelectQuery(sqlString string, params ...interface{}) (*sql.Rows, error) {
-	rows, err := d.db.Query(sqlString, params...)
-	if rows != nil {
-		defer rows.Close()
-	}
-	return rows, err
+	return d.db.Query(sqlString, params...)
 }
 
 func (d *DBAdapter) SelectRow(sqlString string, params ...interface{}) *sql.Row {

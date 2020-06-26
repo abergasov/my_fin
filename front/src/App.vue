@@ -116,13 +116,6 @@
           { title: 'categories', icon: 'mdi-format-list-bulleted-square', link: '/categories'},
           { title: 'profile', icon: 'mdi-account-box', link: '/profile'},
         ],
-        notifications: [
-          'Mike John Responded to your email',
-          'You have 5 new tasks',
-          'You\'re now friends with Andrew',
-          'Another Notification',
-          'Another one',
-        ],
         darkMode: false,
         lang: [
           { title: 'English', code: 'en', icon: '' },
@@ -145,6 +138,7 @@
       this.darkMode = +localStorage.dark === 1;
       this.$vuetify.theme.dark = this.darkMode;
       this.getUserCategories();
+      this.getExpenses();
     },
     methods: {
       logout() {
@@ -170,17 +164,27 @@
         //this.$changeLanguage(code)
       },
 
+      getExpenses() {
+        this.askBackend('expense/list', {})
+          .then(({data}) => {
+            if (data.ok) {
+              this.$store.commit('setExpenses', data.rows || []);
+            }
+          })
+          .catch()
+      },
+
       getUserCategories() {
         if (this.$store.categories) {
           //return;
         }
         this.askBackend('user_category/get', {})
-                .then(({data}) => {
-                  if (data.ok) {
-                    this.$store.commit('setCategories', data.categories || []);
-                  }
-                })
-                .catch()
+          .then(({data}) => {
+            if (data.ok) {
+              this.$store.commit('setCategories', data.categories || []);
+            }
+          })
+          .catch()
       }
     }
   }
