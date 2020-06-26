@@ -42,7 +42,7 @@
         <v-icon v-if="darkMode">mdi-brightness-7</v-icon>
         <v-icon v-else>mdi-brightness-4</v-icon>
       </v-btn>
-      <div class="text-center">
+      <div class="text-center flag_wrap">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn tile outlined color="success" v-bind="attrs" v-on="on">
@@ -187,6 +187,10 @@
 </script>
 
 <style scoped>
+  .flag_wrap {
+    padding-right: 8px;
+    padding-left: 16px;
+  }
 .mini_swapper{
   cursor: pointer;
 }
