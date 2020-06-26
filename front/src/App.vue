@@ -45,7 +45,10 @@
       <div class="text-center">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on">{{ currentLang.title }}</v-btn>
+            <v-btn tile outlined color="success" v-bind="attrs" v-on="on">
+              <v-icon left>mdi-flag</v-icon>
+              {{ currentLang.code }}
+            </v-btn>
           </template>
           <v-list>
             <v-list-item v-for="(item, index) in lang" :key="index" @click="setLanguage(item.code)">
