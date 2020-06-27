@@ -3,10 +3,12 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 	"my_fin/src/data_provider"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -85,9 +87,9 @@ func (ur *UserRepository) ValidateUser(login string, password string) (u User, r
 
 func (ur *UserRepository) CreateToken(userId uint64) (string, error) {
 	atClaims := jwt.MapClaims{
-		"authorized": true,
-		"user_id":    userId,
-		"exp":        time.Now().Add(time.Minute * time.Duration(ur.jwtLiveTime)).Unix(),
+		//"authorized": true,
+		"user_id": userId,
+		"exp":     time.Now().Add(time.Minute * time.Duration(ur.jwtLiveTime)).Unix(),
 	}
 	at := jwt.NewWithClaims(jwt.SigningMethodHS512, atClaims)
 	token, err := at.SignedString([]byte(ur.jwtKey))
@@ -95,4 +97,26 @@ func (ur *UserRepository) CreateToken(userId uint64) (string, error) {
 		return "", err
 	}
 	return token, nil
+}
+
+func (ur *UserRepository) ValidateToken(tokenString string) (userID uint64, valid bool) {
+	token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(ur.jwtKey), nil
+	})
+	//todo send browser fingerprint. validate pair token + fingerprint. If false - token is wrong or stolen
+	//todo save refresh to bd + fingerprint
+
+	if err != nil {
+		return
+	}
+
+	if token.Valid {
+		for i, v := range token.Claims.(jwt.MapClaims) {
+			if i == "user_id" {
+				uId, _ := strconv.Atoi(fmt.Sprintf("%v", v))
+				return uint64(uId), true
+			}
+		}
+	}
+	return
 }

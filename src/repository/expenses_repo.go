@@ -21,7 +21,7 @@ func InitExpenseRepository(db *data_provider.DBAdapter) *ExpenseRepository {
 	return &ExpenseRepository{db: db}
 }
 
-func (cr *ExpenseRepository) AddExpense(userId int64, expense *Expense) bool {
+func (cr *ExpenseRepository) AddExpense(userId uint64, expense *Expense) bool {
 	timeNow := time.Now()
 	id := cr.db.InsertQuery("expenses", map[string]interface{}{
 		"user_id":    userId,
@@ -34,7 +34,7 @@ func (cr *ExpenseRepository) AddExpense(userId int64, expense *Expense) bool {
 	return id > 0
 }
 
-func (cr *ExpenseRepository) GetExpense(userId int64) *[]Expense {
+func (cr *ExpenseRepository) GetExpense(userId uint64) *[]Expense {
 	sqlR := "SELECT created_at, category, amount, commentary, type FROM expenses WHERE user_id = ? ORDER BY e_id DESC LIMIT 2000"
 	rows, err := cr.db.SelectQuery(sqlR, userId)
 

@@ -23,9 +23,14 @@ func main() {
 
 	router.GinEngine.POST("/api/auth/login", router.Login)
 	router.GinEngine.POST("/api/auth/register", router.Register)
-	router.GinEngine.POST("/api/user_category/get", router.UserCategories)
-	router.GinEngine.POST("/api/user_category/update", router.UpdateUserCategories)
-	router.GinEngine.POST("/api/expense/add", router.AddExpense)
-	router.GinEngine.POST("/api/expense/list", router.GetExpense)
+	router.GinEngine.POST("/api/auth/logout", router.Register)
+	userData := router.GinEngine.Group("/api/data")
+	{
+		userData.Use(router.AuthMiddleware())
+		userData.POST("user_category/get", router.UserCategories)
+		userData.POST("user_category/update", router.UpdateUserCategories)
+		userData.POST("expense/add", router.AddExpense)
+		userData.POST("expense/list", router.GetExpense)
+	}
 	log.Fatal(router.GinEngine.Run(":8080"))
 }

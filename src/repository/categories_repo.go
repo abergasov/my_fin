@@ -20,7 +20,7 @@ func InitCategoryRepository(db *data_provider.DBAdapter) *CategoryRepository {
 	return &CategoryRepository{db: db}
 }
 
-func (cr *CategoryRepository) LoadCategories(userId int64) (uCat []Category) {
+func (cr *CategoryRepository) LoadCategories(userId uint64) (uCat []Category) {
 	var catJson string
 	row := cr.db.SelectRow("SELECT categories FROM user_category WHERE u_id = ?", userId)
 	err := row.Scan(&catJson)
@@ -31,7 +31,7 @@ func (cr *CategoryRepository) LoadCategories(userId int64) (uCat []Category) {
 	return
 }
 
-func (cr *CategoryRepository) UpdateCategories(userId int64, payload *[]Category) bool {
+func (cr *CategoryRepository) UpdateCategories(userId uint64, payload *[]Category) bool {
 	sqlR := "INSERT INTO user_category (u_id, categories) VALUES (?, ?) ON DUPLICATE KEY UPDATE categories = ?"
 	str, err := json.Marshal(payload)
 	if err != nil {
