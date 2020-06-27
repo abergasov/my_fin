@@ -130,7 +130,7 @@
     },
     computed: {
       auth() {
-        return this.$store.state.auth;
+        return +this.$store.state.auth === 1;
       },
       alertData() {
         return this.$store.state.alertData;
@@ -169,7 +169,7 @@
 
       getExpenses() {
         this.askBackend('expense/list', {})
-          .then(({data}) => {
+          .then(data => {
             if (data.ok) {
               this.$store.commit('setExpenses', data.rows || []);
             }
@@ -182,7 +182,7 @@
           //return;
         }
         this.askBackend('user_category/get', {})
-          .then(({data}) => {
+          .then(data => {
             if (data.ok) {
               this.$store.commit('setCategories', data.categories || []);
             }

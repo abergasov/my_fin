@@ -14,19 +14,16 @@ const axios = require('axios').default;
 
 
 Vue.prototype.askBackend = function (url, param) {
-    let domain = process.env.BACK_SERVER;
-    console.log('ask smth!')
-    console.log(domain, param);
+    console.log('ask smth!', process.env.BACK_SERVER);
     return new Promise((resolve, reject) => {
-        axios.post(`/api/${url}`, param).
-            then(resp => {
-                resolve(resp)
-            })
+        axios.post(`/api/${url}`, param)
+            .then(resp => resolve(resp.data))
             .catch(error => {
                 let code = +error.response.status;
                 let message = ''
                 switch (code) {
                     case 401:
+                        this.$store.commit('setAuth', 0);
                         message = 'Unauthorized';
                         break;
                     case 409:
@@ -36,7 +33,6 @@ Vue.prototype.askBackend = function (url, param) {
                         message = 'Bad request';
                         break;
                 }
-
                 if (message) {
                     this.$store.commit('setAlert', {
                         display: true,
@@ -47,7 +43,7 @@ Vue.prototype.askBackend = function (url, param) {
                 }
                 reject(error)
             })
-    })
+    });
 };
 
 // Configure router

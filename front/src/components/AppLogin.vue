@@ -94,9 +94,12 @@
                     email: this.email,
                     password: this.pass,
                     re_password: this.pass_re,
-                }).then(resp => {
-                   console.log(resp);
-                });
+                }).then(
+                    resp => {
+                        if (resp.ok) {
+                            this.$store.commit('setAuth', 1);
+                        }
+                    });
             }
         }
     }

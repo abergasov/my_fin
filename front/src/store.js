@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        auth: false,
+        auth: 0,
         categories: null,
         expenses: [],
         alertData: {
@@ -16,6 +16,10 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
+        setAuth (state, payload) {
+            state.auth = payload;
+            localStorage.auth = +payload;
+        },
         setExpenses (state, payload) {
             state.expenses = payload;
         },
