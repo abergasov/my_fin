@@ -2,7 +2,7 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class UsersCategories extends AbstractMigration
+class RefreshTokenTable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -31,12 +31,17 @@ class UsersCategories extends AbstractMigration
      */
     public function change()
     {
-        $this->execute("create table user_category
+        $this->execute('create table user_refresh_tokens
                         (
-                        	u_id int null,
-                        	categories json null,
-                        	constraint user_category_pk
-                        		primary key (u_id)
-                        );");
+                        	urt_id int auto_increment,
+                        	refresh_token char(50) null,
+                        	valid_until int null,
+                        	fingerprint int null,
+                        	user_id int null,
+                        	constraint user_refresh_tokens_pk
+                        		primary key (urt_id)
+                        );');
+        $this->execute('create index user_refresh_tokens_user_id_index
+                        	on user_refresh_tokens (user_id);');
     }
 }
