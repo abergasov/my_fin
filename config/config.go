@@ -10,14 +10,16 @@ import (
 )
 
 type AppConfig struct {
-	DBHost  string
-	DBName  string
-	DBUser  string
-	DBPass  string
-	DBPort  string
-	JWTKey  string
-	JWTLive int64
-	ProdEnv bool
+	DBHost    string
+	DBName    string
+	DBUser    string
+	DBPass    string
+	DBPort    string
+	JWTKey    string
+	JWTLive   int64
+	ProdEnv   bool
+	AppDomain string
+	SSLEnable bool
 }
 
 var conf *AppConfig
@@ -31,14 +33,16 @@ func InitConf() *AppConfig {
 		jwtLive = 0
 	}
 	return &AppConfig{
-		DBHost:  getVariableOrDefault(parsedConf, "DB_HOST", ""),
-		DBName:  getVariableOrDefault(parsedConf, "DB_NAME", ""),
-		DBUser:  getVariableOrDefault(parsedConf, "DB_USER", ""),
-		DBPass:  getVariableOrDefault(parsedConf, "DB_PASS", ""),
-		DBPort:  getVariableOrDefault(parsedConf, "DB_PORT", ""),
-		JWTKey:  getVariableOrDefault(parsedConf, "JWT_KEY", ""),
-		JWTLive: jwtLive,
-		ProdEnv: mode == "PROD",
+		DBHost:    getVariableOrDefault(parsedConf, "DB_HOST", ""),
+		DBName:    getVariableOrDefault(parsedConf, "DB_NAME", ""),
+		DBUser:    getVariableOrDefault(parsedConf, "DB_USER", ""),
+		DBPass:    getVariableOrDefault(parsedConf, "DB_PASS", ""),
+		DBPort:    getVariableOrDefault(parsedConf, "DB_PORT", ""),
+		JWTKey:    getVariableOrDefault(parsedConf, "JWT_KEY", ""),
+		AppDomain: getVariableOrDefault(parsedConf, "APP_DOMAIN", ""),
+		SSLEnable: getVariableOrDefault(parsedConf, "APP_DOMAIN", "0") == "1",
+		JWTLive:   jwtLive,
+		ProdEnv:   mode == "PROD",
 	}
 }
 

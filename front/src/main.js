@@ -17,7 +17,37 @@ Vue.prototype.askBackend = function (url, param) {
     let domain = process.env.BACK_SERVER;
     console.log('ask smth!')
     console.log(domain, param);
-    return axios.post(`/api/${url}`, param);
+    return new Promise((resolve, reject) => {
+        axios.post(`/api/${url}`, param).
+            then(resp => {
+                resolve(resp)
+            })
+            .catch(error => {
+                let code = +error.response.status;
+                let message = ''
+                switch (code) {
+                    case 401:
+                        message = 'Unauthorized';
+                        break;
+                    case 409:
+                        message = 'Already exist';
+                        break;
+                    case 400:
+                        message = 'Bad request';
+                        break;
+                }
+
+                if (message) {
+                    this.$store.commit('setAlert', {
+                        display: true,
+                        text: message,
+                        color: 'error',
+                        delay: 5,
+                    });
+                }
+                reject(error)
+            })
+    })
 };
 
 // Configure router

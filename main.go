@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 	"my_fin/config"
-	"my_fin/src/controllers"
 	"my_fin/src/data_provider"
 	"my_fin/src/repository"
+	"my_fin/src/routes"
 )
 
 func main() {
@@ -14,11 +14,15 @@ func main() {
 	if err != nil {
 		log.Fatal("Error db connect", err.Error())
 	}
-	categoryRepository := repository.InitCategoryRepository(dbConnection)
-	expenseRepository := repository.InitExpenseRepository(dbConnection)
 
-	router := controllers.InitRouter(appConf, categoryRepository, expenseRepository)
+	router := routes.InitRouter(appConf, &routes.RouterRepoConfig{
+		CategoryRepository: repository.InitCategoryRepository(dbConnection),
+		ExpenseRepository:  repository.InitExpenseRepository(dbConnection),
+		UserRepository:     repository.InitUserRepository(dbConnection, appConf.JWTKey, appConf.JWTLive),
+	})
+
 	router.GinEngine.POST("/api/auth/login", router.Login)
+	router.GinEngine.POST("/api/auth/register", router.Register)
 	router.GinEngine.POST("/api/user_category/get", router.UserCategories)
 	router.GinEngine.POST("/api/user_category/update", router.UpdateUserCategories)
 	router.GinEngine.POST("/api/expense/add", router.AddExpense)
