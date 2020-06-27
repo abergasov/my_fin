@@ -56,6 +56,11 @@ func (ar *AppRouter) Register(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"ok": true})
 }
 
+func (ar *AppRouter) Logout(c *gin.Context) {
+	ar.setSecretCookie(c, tokenCookie, "")
+	c.JSON(http.StatusOK, gin.H{"ok": true})
+}
+
 func (ar *AppRouter) setSecretCookie(c *gin.Context, keyValue string, keyName string) {
 	c.SetCookie(keyValue, keyName, int(ar.config.JWTLive)*60, "/api/data", ar.config.AppDomain, ar.config.SSLEnable, true)
 }
