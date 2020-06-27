@@ -33,7 +33,7 @@ class UsersCategories extends AbstractMigration
     {
         $this->execute("create table user_category
                         (
-                        	u_id int null,
+                        	u_id int not null,
                         	categories json null,
                         	constraint user_category_pk
                         		primary key (u_id)
