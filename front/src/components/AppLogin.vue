@@ -1,54 +1,54 @@
 <template>
-    <v-main>
-            <v-container class="fill-height" fluid>
-                <v-row align="center" justify="center">
-                    <v-col cols="12" sm="8" md="4">
-                        <v-card class="elevation-12">
-                            <v-toolbar  flat>
-                                <v-toolbar-title>{{ loginMode ? 'Login' : 'Register' }}</v-toolbar-title>
-                                <v-spacer></v-spacer>
-                                <v-btn class="ma-2" :outlined="loginMode" @click="switchMode" color="indigo">Register</v-btn>
-                                <v-btn class="ma-2" :outlined="!loginMode" @click="switchMode" color="indigo">Sign in</v-btn>
-                            </v-toolbar>
-                            <v-card-text>
-                                <v-form v-model="formValid">
-                                    <v-text-field label="Email"
-                                                  name="login"
-                                                  type="email"
-                                                  required
-                                                  v-model="email"
-                                                  :rules="emailRules"
-                                                  prepend-icon="mdi-account"></v-text-field>
-                                    <v-text-field
-                                            id="password"
-                                            label="Password"
-                                            name="password"
-                                            prepend-icon="mdi-lock"
-                                            required
-                                            :rules="passwordRules"
-                                            v-model="pass"
-                                            type="password"
-                                    ></v-text-field>
-                                    <v-text-field v-if="!loginMode"
-                                            id="password_retype"
-                                            label="Retype password"
-                                            name="password_retype"
-                                            prepend-icon="mdi-lock"
-                                            required
-                                            v-model="pass_re"
-                                            type="password"
-                                    ></v-text-field>
-                                </v-form>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn color="primary" @click="submitForm" :disabled="!isValid">{{ loginMode ? 'Login' : 'Register' }}</v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-main>
+  <v-main>
+    <v-container class="fill-height" fluid>
+      <v-row align="center" justify="center">
+        <v-col cols="12" sm="8" md="4">
+          <v-card class="elevation-12">
+            <v-toolbar  flat>
+                <v-toolbar-title>{{ $t((loginMode ? 'login' : 'register')) }}</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn class="ma-2" :outlined="loginMode" @click="switchMode" color="indigo">Register</v-btn>
+                <v-btn class="ma-2" :outlined="!loginMode" @click="switchMode" color="indigo">Sign in</v-btn>
+            </v-toolbar>
+            <v-card-text>
+                <v-form v-model="formValid">
+                    <v-text-field label="Email"
+                          name="login"
+                          type="email"
+                          required
+                          v-model="email"
+                          :rules="emailRules"
+                          prepend-icon="mdi-account"></v-text-field>
+                    <v-text-field
+                        id="password"
+                        :label="$t('password')"
+                        name="password"
+                        prepend-icon="mdi-lock"
+                        required
+                        :rules="passwordRules"
+                        v-model="pass"
+                        type="password"
+                    ></v-text-field>
+                    <v-text-field v-if="!loginMode"
+                        id="password_retype"
+                        :label="$t('password_retype')"
+                        name="password_retype"
+                        prepend-icon="mdi-lock"
+                        required
+                        v-model="pass_re"
+                        type="password"
+                    ></v-text-field>
+                </v-form>
+            </v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click="submitForm" :disabled="!isValid">{{ $t((loginMode ? 'login' : 'register')) }}</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-main>
 </template>
 
 <script>

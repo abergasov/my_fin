@@ -25,5 +25,9 @@
   "categories": "Категории",
   "profile": "Профиль",
   "home": "Главная",
+  "login": "Вход",
+  "register": "Регистрация",
+  "password": "Пароль",
+  "password_retype": "Повторите пароль",
   "changes": "Последние изменения"
 }

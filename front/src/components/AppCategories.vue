@@ -103,7 +103,7 @@
                 };
             },
             updateCategories() {
-                this.askBackend('user_category/update', {cat: this.categories_copy})
+                this.askBackend('data/user_category/update', {cat: this.categories_copy})
                     .then(({data}) => {
                         if (data.ok) {
                             this.$store.commit('setCategories', data.categories || []);

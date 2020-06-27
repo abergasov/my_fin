@@ -144,7 +144,7 @@
       },
 
       saveAdd() {
-        this.askBackend('expense/add', {
+        this.askBackend('data/expense/add', {
           cat: +this.category,
           amount: +this.amount,
           incoming: this.getType(),
