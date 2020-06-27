@@ -1,11 +1,13 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"log"
 	"my_fin/config"
 	"my_fin/src/data_provider"
 	"my_fin/src/repository"
 	"my_fin/src/routes"
+	"net/http"
 )
 
 func main() {
@@ -19,6 +21,10 @@ func main() {
 		CategoryRepository: repository.InitCategoryRepository(dbConnection),
 		ExpenseRepository:  repository.InitExpenseRepository(dbConnection),
 		UserRepository:     repository.InitUserRepository(dbConnection, appConf.JWTKey, appConf.JWTLive),
+	})
+
+	router.GinEngine.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"ok": true})
 	})
 
 	router.GinEngine.POST("/api/auth/login", router.Login)
