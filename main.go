@@ -23,7 +23,7 @@ func main() {
 		UserRepository:     repository.InitUserRepository(dbConnection, appConf.JWTKey, appConf.JWTLive),
 	})
 
-	router.GinEngine.GET("/ping", func(c *gin.Context) {
+	router.GinEngine.GET("/api/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"ok": true})
 	})
 
