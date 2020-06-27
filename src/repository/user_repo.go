@@ -71,18 +71,18 @@ func (ur *UserRepository) ValidateUser(login string, password string) (u User, r
 	if !reEmail.MatchString(login) {
 		return
 	}
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), 8)
-	if err != nil {
-		return
-	}
-	sqlU := "SELECT user_id, login, password_hash FROM users WHERE login = ? AND password_hash = ?"
-	row := ur.db.SelectRow(sqlU, login, passwordHash)
+
+	row := ur.db.SelectRow("SELECT user_id, login, password_hash FROM users WHERE login = ?", login)
 
 	errU := row.Scan(&u.ID, &u.Username, &u.Password)
-	if errU != nil && err != sql.ErrNoRows {
+	if errU != nil && errU != sql.ErrNoRows {
 		return
 	}
-	return u, true
+	errC := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	if errC == nil {
+		return u, true
+	}
+	return u, false
 }
 
 func (ur *UserRepository) CreateToken(userId uint64) (string, error) {
