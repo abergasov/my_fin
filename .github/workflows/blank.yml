@@ -15,5 +15,4 @@ jobs:
           username: ${{ secrets.SERVER_ADMIN }}
           key: ${{ secrets.SERVER_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          script: echo 1 >> 1.txt
-          
+          script: cd ${{ secrets.SERVER_PATH }} && bash deploy.sh
