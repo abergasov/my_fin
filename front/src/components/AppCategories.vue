@@ -67,7 +67,7 @@
         },
         methods: {
             startEdit() {
-                this.categories_copy = this.$store.state.categories;
+                this.categories_copy = this.$store.state.categories || [];
                 this.editMode = !this.editMode
             },
             remove(id, parentID) {
