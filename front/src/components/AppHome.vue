@@ -8,7 +8,6 @@
             <ul class="actions_list">
               <li><v-btn @click="addIncome" x-large color="success" block>{{ $t('add_income') }}</v-btn></li>
               <li><v-btn @click="addExpense" x-large color="error" block>{{ $t('add_expense') }}</v-btn></li>
-              <li><v-btn @click="addAsset" x-large color="info" block>{{ $t('add_active') }}</v-btn></li>
             </ul>
           </v-card-actions>
         </v-card>

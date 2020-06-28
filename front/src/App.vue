@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-if="auth" app :mini-variant="miniVariant">
-      <v-list-item @click="miniVariant = !miniVariant" class="mini_swapper">
+    <v-navigation-drawer v-model="drawer" v-if="auth" app>
+      <v-list-item @click="drawer = !drawer" class="mini_swapper">
         <v-list-item-content>
           <v-list-item-title class="title">Das Kapital</v-list-item-title>
           <v-list-item-subtitle>subtext</v-list-item-subtitle>
@@ -25,7 +25,7 @@
       </template>
     </v-navigation-drawer>
     <v-app-bar id="app-bar" absolute app color="transparent" flat height="75">
-      <v-app-bar-nav-icon v-if="auth" @click="miniVariant = !miniVariant"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon v-if="auth" @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title v-if="auth" class="hidden-sm-and-down font-weight-light" v-text="$t($route.name)"/>
       <v-spacer />
 
@@ -50,7 +50,7 @@
           </v-list>
         </v-menu>
       </div>
-      <div v-if="auth">
+      <div style="display: inline-flex" v-if="auth">
       <v-btn class="ml-2" min-width="0" text to="/">
         <v-icon>mdi-view-dashboard</v-icon>
       </v-btn>
@@ -100,7 +100,6 @@
     data () {
       return {
         bottomNav: null,
-        miniVariant: false,
         drawer: true,
         value: true,
         items: [
