@@ -17,15 +17,15 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: cd ${{ secrets.SERVER_PATH }} && bash deploy.sh
       - name: Telegram failed notify
-        if: ${{ failure() }}
       - uses: appleboy/telegram-action@master
+        if: ${{ failure() }}
         with:
           to: ${{ secrets.TELEGRAM_USER_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           args: Failed deploy ${{ job.status }}
       - name: Telegram notify
-        if: ${{ success() }}
       - uses: appleboy/telegram-action@master
+        if: ${{ success() }}
         with:
           to: ${{ secrets.TELEGRAM_USER_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
