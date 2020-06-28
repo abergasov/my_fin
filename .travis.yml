@@ -1,0 +1,23 @@
+language: php
+
+addons:
+  ssh_known_hosts:
+    - $SERVER_IP
+
+before_script:
+  - echo -e "Host $SERVER_IPntStrictHostKeyChecking non" >> ~/.ssh/config
+
+script:
+  -
+before_deploy:
+  - openssl aes-256-cbc -K $SERVER_KEY -out /tmp/deploy_rsa -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 /tmp/deploy_rsa
+  - ssh-add /tmp/deploy_rsa
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: ssh -p$SERVER_PORT $SERVER_ADMIN@$SERVER_IP "echo 1 >> 1.txt"
+    on:
+      branch: master
