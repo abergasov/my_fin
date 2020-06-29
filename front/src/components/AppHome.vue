@@ -148,7 +148,7 @@
           amount: +this.amount,
           incoming: this.getType(),
           commentary: this.commentary,
-        }).then(({data}) => {
+        }).then(data => {
           this.$store.commit('setAlert', {
             display: true,
             text: (data.ok ?  this.$t('added') : this.$t('not_added')),
