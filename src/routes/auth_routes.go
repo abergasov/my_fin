@@ -6,7 +6,9 @@ import (
 	"net/http"
 )
 
-const tokenCookie = "token"
+const tokenCookie = "a"
+const refreshCookie = "z"
+const fingerPrintHeader = "m"
 
 func (ar *AppRouter) Login(c *gin.Context) {
 	var u repository.User
@@ -22,12 +24,13 @@ func (ar *AppRouter) Login(c *gin.Context) {
 		return
 	}
 
-	token, err := ar.userRepository.CreateToken(uR.ID)
+	token, refresh, err := ar.userRepository.CreateToken(uR.ID, uR.UserSign)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"ok": false, "error": "Invalid login/password"})
 		return
 	}
 	ar.setSecretCookie(c, tokenCookie, token)
+	ar.setSecretCookie(c, refreshCookie, refresh)
 	c.JSON(http.StatusOK, gin.H{"ok": true})
 }
 
@@ -47,34 +50,41 @@ func (ar *AppRouter) Register(c *gin.Context) {
 		return
 	}
 
-	token, err := ar.userRepository.CreateToken(user.ID)
+	token, refresh, err := ar.userRepository.CreateToken(user.ID, u.UserSign)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"ok": false, "error": "Error while register"})
 		return
 	}
 	ar.setSecretCookie(c, tokenCookie, token)
+	ar.setSecretCookie(c, refreshCookie, refresh)
 	c.JSON(http.StatusOK, gin.H{"ok": true})
 }
 
 func (ar *AppRouter) Logout(c *gin.Context) {
 	ar.setSecretCookie(c, tokenCookie, "")
+	ar.setSecretCookie(c, refreshCookie, "")
 	c.JSON(http.StatusOK, gin.H{"ok": true})
 }
 
-func (ar *AppRouter) setSecretCookie(c *gin.Context, keyValue string, keyName string) {
-	c.SetCookie(keyValue, keyName, int(ar.config.JWTLive)*60, "/api/data", ar.config.AppDomain, ar.config.SSLEnable, true)
+func (ar *AppRouter) setSecretCookie(c *gin.Context, keyName string, keyValue string) {
+	liveTime := int(ar.config.JWTLive) * 60
+	if keyName == refreshCookie {
+		liveTime = 60 * 86400
+	}
+	c.SetCookie(keyName, keyValue, liveTime, "/api/data", ar.config.AppDomain, ar.config.SSLEnable, true)
 }
 
 func (ar *AppRouter) AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, err := c.Cookie(tokenCookie)
-		if err != nil || len(token) < 10 {
+		tokenRefresh, errRf := c.Cookie(refreshCookie)
+		if (err != nil || len(token) < 10) || (errRf != nil || len(tokenRefresh) < 10) {
 			c.JSON(http.StatusUnauthorized, gin.H{"ok": false, "error": "Invalid login/password"})
 			c.Abort()
 			return
 		}
 
-		uId, valid := ar.userRepository.ValidateToken(token)
+		uId, valid := ar.userRepository.ValidateToken(token, tokenRefresh, c.GetHeader(fingerPrintHeader))
 		if !valid {
 			c.JSON(http.StatusUnauthorized, gin.H{"ok": false, "error": "Invalid login/password"})
 			c.Abort()

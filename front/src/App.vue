@@ -135,11 +135,14 @@
       this.darkMode = +localStorage.dark === 1;
       this.$vuetify.theme.dark = this.darkMode;
       if (this.auth) {
-        this.getUserCategories();
-        this.getExpenses();
+        setTimeout(this.initApp, 1000)
       }
     },
     methods: {
+      initApp() {
+        this.getUserCategories();
+        this.getExpenses();
+      },
       logout() {
         this.askBackend('auth/logout', {}).then(() => {
           this.$store.commit('setAuth', 0);

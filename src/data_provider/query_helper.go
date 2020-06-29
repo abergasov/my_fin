@@ -46,7 +46,8 @@ func (d *DBAdapter) InsertQuery(table string, params map[string]interface{}) (id
 		values = append(values, v)
 		sqlPl = append(sqlPl, "?")
 	}
-	sqlU := "INSERT INTO " + table + " (" + strings.Join(sqlP, ",") + ") VALUES (" + strings.Join(sqlPl, ",") + ")"
+
+	sqlU := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", table, strings.Join(sqlP, ","), strings.Join(sqlPl, ","))
 	res, err := d.db.Exec(sqlU, values...)
 	if err != nil {
 		return

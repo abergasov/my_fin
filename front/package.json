@@ -21,6 +21,8 @@
   "dependencies": {
     "@babel/polyfill": "~7.2",
     "axios": "^0.19.2",
+    "fingerprintjs2": "^2.1.0",
+    "object-hash": "^2.0.3",
     "vue": "~2.6",
     "vue-i18n": "^8.15.3",
     "vue-moment": "^4.1.0",

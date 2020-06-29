@@ -12,11 +12,34 @@ Vue.use(VueRouter);
 Vue.use(require('vue-moment'));
 const axios = require('axios').default;
 
+import Fingerprint2 from "fingerprintjs2"
+let hash = require('object-hash');
+
+window.userId = -1;
+if (window.requestIdleCallback) {
+    requestIdleCallback(function () {
+        Fingerprint2.get(function (components) {
+            window.userId = hash(components);
+        })
+    })
+} else {
+    setTimeout(function () {
+        Fingerprint2.get(function (components) {
+            window.userId = hash(components);
+        })
+    }, 500)
+}
 
 Vue.prototype.askBackend = function (url, param) {
     console.log('ask smth!', process.env.BACK_SERVER);
+    param.user_sign = window.userId;
+    let config = {
+        headers: {
+            m: window.userId,
+        }
+    }
     return new Promise((resolve, reject) => {
-        axios.post(`/api/${url}`, param)
+        axios.post(`/api/${url}`, param, config)
             .then(resp => resolve(resp.data))
             .catch(error => {
                 let code = +error.response.status;
