@@ -4,6 +4,7 @@
             <v-card-title class="headline">{{ $t('changes') }}</v-card-title>
             <v-data-table :headers="headers"
                           :items="rows"
+                          :loading="isLoading"
                           :sort-by="['calories', 'fat']"
                           :sort-desc="[false, true]"
                           multi-sort
@@ -47,6 +48,9 @@
                     mixed.push(tmp);
                 }
                 return mixed;
+            },
+            isLoading() {
+                return this.$store.state.dataLoading;
             },
             cats() {
                 return this.$store.state.categories || [];

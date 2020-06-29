@@ -38,10 +38,15 @@ Vue.prototype.askBackend = function (url, param) {
             m: window.userId,
         }
     }
+    this.$store.commit('setLoading', true);
     return new Promise((resolve, reject) => {
         axios.post(`/api/${url}`, param, config)
-            .then(resp => resolve(resp.data))
+            .then(resp => {
+                this.$store.commit('setLoading', false);
+                resolve(resp.data)
+            })
             .catch(error => {
+                this.$store.commit('setLoading', false);
                 let code = +error.response.status;
                 let message = ''
                 switch (code) {

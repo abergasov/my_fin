@@ -6,6 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         auth: 0,
+        dataLoading: false,
         categories: null,
         expenses: [],
         alertData: {
@@ -16,6 +17,9 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
+        setLoading(state, payload) {
+            state.dataLoading = payload;
+        },
         setAuth (state, payload) {
             state.auth = payload;
             localStorage.auth = +payload;
