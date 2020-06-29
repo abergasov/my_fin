@@ -38,6 +38,11 @@ const store = new Vuex.Store({
                 console.log('clear alert');
             }, payload.delay * 1000)
         }
+    },
+    getters: {
+        authGetter: state => {
+            return state.auth;
+        }
     }
 })
 

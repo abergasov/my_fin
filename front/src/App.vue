@@ -128,6 +128,13 @@
         return this.$store.state.alertData;
       }
     },
+    mounted () {
+      this.$store.watch(() => this.$store.getters.authGetter, n => {
+        if (n === 1) {
+          this.initApp();
+        }
+      })
+    },
     created() {
       let currentSize = this.$vuetify.breakpoint.name;
       if (currentSize === 'xs' || currentSize === 'sm') {
