@@ -129,6 +129,11 @@
       }
     },
     created() {
+      let currentSize = this.$vuetify.breakpoint.name;
+      if (currentSize === 'xs' || currentSize === 'sm') {
+        this.drawer = false;
+      }
+
       this.$store.commit('setAuth', localStorage.auth || 0);
 
       this.setLanguage(localStorage.lang || 'en');

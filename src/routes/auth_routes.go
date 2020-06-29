@@ -24,7 +24,7 @@ func (ar *AppRouter) Login(c *gin.Context) {
 		return
 	}
 
-	token, refresh, err := ar.userRepository.CreateToken(uR.ID, uR.UserSign)
+	token, refresh, err := ar.userRepository.CreateToken(uR.ID, u.UserSign)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"ok": false, "error": "Invalid login/password"})
 		return
