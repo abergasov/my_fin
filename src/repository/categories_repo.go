@@ -20,14 +20,16 @@ func InitCategoryRepository(db *data_provider.DBAdapter) *CategoryRepository {
 	return &CategoryRepository{db: db}
 }
 
-func (cr *CategoryRepository) LoadCategories(userId uint64) (uCat []Category) {
+func (cr *CategoryRepository) LoadCategories(userId uint64) (uCat []Category, uICat []Category) {
 	var catJson string
-	row := cr.db.SelectRow("SELECT categories FROM user_category WHERE u_id = ?", userId)
-	err := row.Scan(&catJson)
+	var catInJson string
+	row := cr.db.SelectRow("SELECT categories, categories_incoming FROM user_category WHERE u_id = ?", userId)
+	err := row.Scan(&catJson, &catInJson)
 	if err != nil && err != sql.ErrNoRows {
 		return
 	}
 	json.Unmarshal([]byte(catJson), &uCat)
+	json.Unmarshal([]byte(catInJson), &uICat)
 	return
 }
 

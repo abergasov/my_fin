@@ -34,7 +34,7 @@ class UsersCategories extends AbstractMigration
         $this->execute("create table user_category
                         (
                         	u_id int not null,
-                        	categories json null,
+                        	categories longtext collate utf8mb4_bin default '' null,
                         	constraint user_category_pk
                         		primary key (u_id)
                         );");

@@ -9,7 +9,8 @@ import (
 
 func (ar *AppRouter) UserCategories(c *gin.Context) {
 	userId := ar.getUserIdFromRequest(c)
-	c.JSON(http.StatusOK, gin.H{"ok": true, "categories": ar.categoryRepository.LoadCategories(userId)})
+	uCat, uInCat := ar.categoryRepository.LoadCategories(userId)
+	c.JSON(http.StatusOK, gin.H{"ok": true, "categories": uCat, "categories_incoming": uInCat})
 }
 
 func (ar *AppRouter) UpdateUserCategories(c *gin.Context) {
@@ -25,7 +26,8 @@ func (ar *AppRouter) UpdateUserCategories(c *gin.Context) {
 
 	userId := ar.getUserIdFromRequest(c)
 	if ar.categoryRepository.UpdateCategories(userId, &p.Cat) {
-		c.JSON(http.StatusOK, gin.H{"ok": true, "categories": ar.categoryRepository.LoadCategories(userId)})
+		uCat, uInCat := ar.categoryRepository.LoadCategories(userId)
+		c.JSON(http.StatusOK, gin.H{"ok": true, "categories": uCat, "categories_incoming": uInCat})
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"ok": false})
 	}

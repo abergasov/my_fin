@@ -64,6 +64,11 @@ func (ur *UserRepository) RegisterUser(rU *RegisterUser) (u User, exist bool, er
 			return u, false, errors.New("42")
 		}
 		u.ID = uint64(ur.db.InsertQuery("users", map[string]interface{}{"login": rU.Email, "password_hash": passwordHash}))
+		ur.db.InsertQuery("user_category", map[string]interface{}{
+			"u_id":                u.ID,
+			"categories":          "",
+			"categories_incoming": "",
+		})
 		return
 	}
 	return u, true, nil
