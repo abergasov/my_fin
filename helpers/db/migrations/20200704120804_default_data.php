@@ -31,7 +31,15 @@ class DefaultData extends AbstractMigration
      */
     public function change()
     {
-        $this->execute("alter table user_category alter column categories set default ''");
-        $this->execute("alter table user_category alter column categories_incoming set default ''");
+        $this->execute("create trigger user_category_default before insert on user_category
+                        for each row
+                        begin
+                           if (NEW.categories is null ) then
+                              set NEW.categories = '';
+                           end if;
+                           if (NEW.categories_incoming is null ) then
+                              set NEW.categories_incoming = '';
+                           end if;
+                        end");
     }
 }
