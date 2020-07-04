@@ -31,6 +31,6 @@ class AddCatType extends AbstractMigration
      */
     public function change()
     {
-        $this->execute('alter table user_category add categories_incoming longtext collate utf8mb4_bin default '' null;');
+        $this->execute("alter table user_category add categories_incoming longtext collate utf8mb4_bin default ''");
     }
 }
