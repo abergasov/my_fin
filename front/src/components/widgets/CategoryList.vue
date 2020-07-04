@@ -1,7 +1,7 @@
 <template>
     <v-card class="mx-auto">
-        <v-toolbar flat v-bind:class="[(incoming ? 'error' : 'success'), 'cat_wrap']">
-            <v-toolbar-title class="font-weight-light">{{ $t((incoming ? 'category' : 'incoming_category')) }}</v-toolbar-title>
+        <v-toolbar flat v-bind:class="[(incoming ? 'success' : 'error'), 'cat_wrap']">
+            <v-toolbar-title class="font-weight-light">{{ $t((incoming ? 'incoming_category' : 'category')) }}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn v-if="false && editMode" color="error" class="cancel_top" fab small @click="cancelChanges">
                 <v-icon>mdi-close-octagon-outline</v-icon>
