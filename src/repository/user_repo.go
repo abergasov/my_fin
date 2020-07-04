@@ -3,13 +3,11 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"my_fin/src/data_provider"
 	"regexp"
-	"strconv"
 	"time"
 )
 
@@ -25,6 +23,12 @@ type RegisterUser struct {
 	Password   string `json:"password"`
 	RePassword string `json:"re_password"`
 	UserSign   string `json:"user_sign"`
+}
+
+type TokenData struct {
+	AccessToken  string
+	RefreshToken string
+	ValidUntil   int64
 }
 
 var reEmail = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
@@ -93,22 +97,30 @@ func (ur *UserRepository) ValidateUser(login string, password string) (u User, r
 	return u, false
 }
 
-func (ur *UserRepository) CreateToken(userId uint64, userSign string) (string, string, error) {
+/**
+return access_token, refresh_token
+*/
+func (ur *UserRepository) CreateToken(userId uint64, userSign string) (*TokenData, error) {
+	tData := &TokenData{
+		ValidUntil: time.Now().Add(time.Minute * time.Duration(ur.jwtLiveTime)).Unix(),
+	}
 	atClaims := jwt.MapClaims{
 		//"authorized": true,
 		"user_id": userId,
-		"exp":     time.Now().Add(time.Minute * time.Duration(ur.jwtLiveTime)).Unix(),
+		"exp":     tData.ValidUntil,
 	}
 	at := jwt.NewWithClaims(jwt.SigningMethodHS512, atClaims)
 	token, err := at.SignedString([]byte(ur.jwtKey))
 	if err != nil {
-		return "", "", err
+		return tData, err
 	}
+	tData.AccessToken = token
 	refresh, errR := ur.generateRefreshToken(userId, userSign)
 	if errR != nil {
-		return "", "", errR
+		return tData, errR
 	}
-	return token, refresh, nil
+	tData.RefreshToken = refresh
+	return tData, nil
 }
 
 func (ur *UserRepository) generateRefreshToken(userId uint64, userSign string) (string, error) {
@@ -125,7 +137,7 @@ func (ur *UserRepository) generateRefreshToken(userId uint64, userSign string) (
 	return uid.String(), nil
 }
 
-func (ur *UserRepository) ValidateToken(tokenString string, tokenRefresh string, userFingerPrint string) (userID interface{}, valid bool) {
+func (ur *UserRepository) ValidateToken(tokenString string) (userID interface{}, valid bool) {
 	token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(ur.jwtKey), nil
 	})
@@ -137,12 +149,7 @@ func (ur *UserRepository) ValidateToken(tokenString string, tokenRefresh string,
 	if token.Valid {
 		for i, v := range token.Claims.(jwt.MapClaims) {
 			if i == "user_id" {
-				uId, _ := strconv.Atoi(fmt.Sprintf("%v", v))
-				rtValid := ur.validateRefreshToken(v, tokenRefresh, userFingerPrint)
-				if rtValid {
-					return uId, true
-				}
-
+				return v, true
 			}
 		}
 	}
@@ -152,7 +159,7 @@ func (ur *UserRepository) ValidateToken(tokenString string, tokenRefresh string,
 /**
 browser send fingerprint. validate pair token + fingerprint. If false - token is wrong or stolen
 */
-func (ur *UserRepository) validateRefreshToken(user interface{}, refreshToken string, fingerPrint string) bool {
+func (ur *UserRepository) ValidateRefreshToken(user interface{}, refreshToken string, fingerPrint string) bool {
 	sqlR := "SELECT refresh_token, fingerprint, expires_at FROM users_refresh_tokens WHERE user_id = ?"
 	rows, errRf := ur.db.SelectQuery(sqlR, user)
 	if errRf != nil {

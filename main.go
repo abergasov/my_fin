@@ -30,6 +30,7 @@ func main() {
 	router.GinEngine.POST("/api/auth/login", router.Login)
 	router.GinEngine.POST("/api/auth/register", router.Register)
 	router.GinEngine.POST("/api/auth/logout", router.Logout)
+	router.GinEngine.POST("/api/auth/refresh", router.Refresh)
 	userData := router.GinEngine.Group("/api/data")
 	{
 		userData.Use(router.AuthMiddleware())
