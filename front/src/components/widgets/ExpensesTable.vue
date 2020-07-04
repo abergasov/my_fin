@@ -12,7 +12,8 @@
                 <template v-slot:item="props">
                     <tr :class="getRowClassForType(props.item.incoming)">
                         <td>{{props.item.cat_name}}</td>
-                        <td>{{ (props.item.incoming === 'E' ? '-' : '+') + props.item.amount}}</td>
+                        <td>{{ (props.item.incoming === 'E' ? '-' + props.item.amount : '')}}</td>
+                        <td>{{ (props.item.incoming !== 'E' ? '+' + props.item.amount : '')}}</td>
                         <td>{{props.item.created_at}}</td>
                         <td style="max-width: 150px">{{props.item.commentary}}</td>
                     </tr>
@@ -30,7 +31,8 @@
             return {
                 headers: [
                     { text: 'Category', value: 'cat_name' },
-                    { text: 'Amount', value: 'amount' },
+                    { text: 'Expense', value: 'amount' },
+                    { text: 'Incoming', value: 'amount' },
                     { text: 'Created at', value: 'created_at' },
                     { text: 'Commentary', value: 'commentary' },
                 ],
@@ -40,7 +42,9 @@
             rows() {
                 let rows = this.$store.state.expenses;
                 let mixed = [];
-                let simplyCat = this.simplyCat();
+                let exCat = this.simplyCat(this.cats);
+                let inCat = this.simplyCat(this.cats_inc);
+                let simplyCat = Object.assign(exCat, inCat);
                 for (let i = 0; i < rows.length; i++) {
                     let tmp = rows[i];
                     tmp.cat_name = simplyCat[rows[i].cat];
@@ -53,13 +57,16 @@
                 return this.$store.state.dataLoading;
             },
             cats() {
-                return this.$store.state.categories || [];
+                return this.$store.state.categories_expenses || [];
+            },
+            cats_inc() {
+                return this.$store.state.categories_incoming || [];
             },
         },
         methods: {
-            simplyCat() {
+            simplyCat(ct) {
                 let rebuild = {};
-                for (let i of this.cats) {
+                for (let i of ct) {
                     rebuild[i.id] = i.title;
                     for (let j of i.sub) {
                         rebuild[j.id] = j.title;
