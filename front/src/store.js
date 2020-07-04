@@ -6,6 +6,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         auth: 0,
+        auth_expires: 0,
+        auth_user: 0,
         dataLoading: false,
         categories: null,
         expenses: [],
@@ -19,6 +21,13 @@ const store = new Vuex.Store({
     mutations: {
         setLoading(state, payload) {
             state.dataLoading = payload;
+        },
+
+        setUserId(state, payload) {
+            state.auth_user = +payload;
+        },
+        setAuthExpires(state, payload) {
+            state.auth_expires = +payload;
         },
         setAuth (state, payload) {
             state.auth = payload;
@@ -36,7 +45,7 @@ const store = new Vuex.Store({
             setTimeout(() => {
                 state.alertData.display = false;
                 console.log('clear alert');
-            }, payload.delay * 1000)
+            }, (payload.delay || 5) * 1000)
         }
     },
     getters: {

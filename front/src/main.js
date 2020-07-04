@@ -49,11 +49,22 @@ Vue.prototype.askBackend = function (url, param) {
                 this.$store.commit('setLoading', false);
                 let code = +error.response.status;
                 let message = ''
+                if (code === 401) {
+                    axios.post(`/api/auth/refresh`, {user_id: this.$store.state.auth_user}, config)
+                        .then(resp => {
+                            if (resp.data.ok) {
+                                this.$store.commit('setAuth', 1);
+                                resolve(this.askBackend(url, param));
+                            }
+                            reject(error);
+                        })
+                        .catch(e => {
+                            this.$store.commit('setAuth', 0);
+                            this.$store.commit('setAlert', {display: true, text: 'Unauthorized', color: 'error'});
+                            reject(error);
+                        })
+                }
                 switch (code) {
-                    case 401:
-                        this.$store.commit('setAuth', 0);
-                        message = 'Unauthorized';
-                        break;
                     case 409:
                         message = 'Already exist';
                         break;
@@ -66,7 +77,6 @@ Vue.prototype.askBackend = function (url, param) {
                         display: true,
                         text: message,
                         color: 'error',
-                        delay: 5,
                     });
                 }
                 reject(error)

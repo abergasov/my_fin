@@ -88,6 +88,15 @@
             switchMode() {
                 this.loginMode = !this.loginMode;
             },
+            parseJwt(token) {
+                let base64Url = token.split('.')[1];
+                let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                return JSON.parse(jsonPayload);
+            },
             submitForm() {
                 let url = this.loginMode ? 'auth/login' : 'auth/register';
                 this.askBackend(url, {
@@ -97,7 +106,12 @@
                 }).then(
                     resp => {
                         if (resp.ok) {
-                            this.$store.commit('setAuth', 1);
+                            let rawData = this.parseJwt(resp.token);
+                            this.$store.commit('setUserId', rawData.user_id);
+                            this.$store.commit('setAuthExpires', rawData.exp);
+                            setTimeout(() => {
+                                this.$store.commit('setAuth', 1);
+                            });
                         }
                     });
             }
