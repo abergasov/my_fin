@@ -62,7 +62,7 @@
         },
         computed: {
             categories() {
-                return this.incoming ? this.$store.state.categories_expenses : this.$store.state.categories_incoming;
+                return this.incoming ? this.$store.state.categories_incoming : this.$store.state.categories_expenses;
             },
         },
         methods: {
