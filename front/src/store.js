@@ -9,7 +9,8 @@ const store = new Vuex.Store({
         auth_expires: 0,
         auth_user: 0,
         dataLoading: false,
-        categories: null,
+        categories_expenses: null,
+        categories_incoming: null,
         expenses: [],
         alertData: {
             display: false,
@@ -36,8 +37,11 @@ const store = new Vuex.Store({
         setExpenses (state, payload) {
             state.expenses = payload;
         },
-        setCategories (state, payload) {
-            state.categories = payload;
+        setCategoriesExpenses (state, payload) {
+            state.categories_expenses = payload;
+        },
+        setCategoriesIncoming (state, payload) {
+            state.categories_incoming = payload;
         },
         setAlert (state, payload) {
             console.log('set alert');

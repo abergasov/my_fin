@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"my_fin/src/data_provider"
 )
 
@@ -33,8 +34,8 @@ func (cr *CategoryRepository) LoadCategories(userId uint64) (uCat []Category, uI
 	return
 }
 
-func (cr *CategoryRepository) UpdateCategories(userId uint64, payload *[]Category) bool {
-	sqlR := "INSERT INTO user_category (u_id, categories) VALUES (?, ?) ON DUPLICATE KEY UPDATE categories = ?"
+func (cr *CategoryRepository) UpdateCategories(userId uint64, payload *[]Category, tableKey string) bool {
+	sqlR := fmt.Sprintf("INSERT INTO user_category (u_id, %s) VALUES (?, ?) ON DUPLICATE KEY UPDATE %s = ?", tableKey, tableKey)
 	str, err := json.Marshal(payload)
 	if err != nil {
 		return false

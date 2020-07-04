@@ -1,5 +1,6 @@
 {
-  "category": "Current categories",
+  "category": "Current expenses categories",
+  "incoming_category": "Current incoming categories",
   "new_category_name": "New category name",
   "new_sub_category_name": "New child category name",
   "update": "Update",

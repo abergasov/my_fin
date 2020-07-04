@@ -15,7 +15,8 @@ func (ar *AppRouter) UserCategories(c *gin.Context) {
 
 func (ar *AppRouter) UpdateUserCategories(c *gin.Context) {
 	var p struct {
-		Cat []repository.Category `json:"cat"`
+		Cat         []repository.Category `json:"cat"`
+		CatIncoming []repository.Category `json:"cat_in"`
 	}
 	decoder := json.NewDecoder(c.Request.Body)
 	err := decoder.Decode(&p)
@@ -25,7 +26,13 @@ func (ar *AppRouter) UpdateUserCategories(c *gin.Context) {
 	}
 
 	userId := ar.getUserIdFromRequest(c)
-	if ar.categoryRepository.UpdateCategories(userId, &p.Cat) {
+	tableKey := "categories"
+	cat := &p.Cat
+	if p.Cat == nil {
+		tableKey = "categories_incoming"
+		cat = &p.CatIncoming
+	}
+	if ar.categoryRepository.UpdateCategories(userId, cat, tableKey) {
 		uCat, uInCat := ar.categoryRepository.LoadCategories(userId)
 		c.JSON(http.StatusOK, gin.H{"ok": true, "categories": uCat, "categories_incoming": uInCat})
 	} else {

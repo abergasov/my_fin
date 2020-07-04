@@ -196,7 +196,8 @@
         this.askBackend('data/user_category/get', {})
           .then(data => {
             if (data.ok) {
-              this.$store.commit('setCategories', data.categories || []);
+              this.$store.commit('setCategoriesIncoming', data.categories_incoming || []);
+              this.$store.commit('setCategoriesExpenses', data.categories || []);
             }
           })
       }
