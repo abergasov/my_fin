@@ -108,8 +108,8 @@
                         if (!data.ok) {
                             return;
                         }
-                        let type = this.incoming ? 'setCategoriesIncoming' : 'setCategoriesExpenses';
-                        this.$store.commit(type, data.categories || []);
+                        this.$store.commit('setCategoriesExpenses', data.categories || []);
+                        this.$store.commit('setCategoriesIncoming', data.categories_incoming || []);
                         this.categories_copy = data.categories;
                         this.editMode = false;
                     })
