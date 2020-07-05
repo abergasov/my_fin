@@ -58,9 +58,9 @@
             return {
                 formValid: false,
                 loginMode: true,
-                email: '',
-                pass: '',
-                pass_re: '',
+                email: 'a@a.ru',
+                pass: '123123',
+                pass_re: '123123',
                 emailRules: [
                     v => !!v || 'E-mail is required',
                     v => /.+@.+\..+/.test(v) || 'E-mail must be valid',

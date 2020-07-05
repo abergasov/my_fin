@@ -9,17 +9,19 @@ import (
 )
 
 type AppRouter struct {
-	GinEngine          *gin.Engine
-	config             *config.AppConfig
-	categoryRepository *repository.CategoryRepository
-	expenseRepository  *repository.ExpenseRepository
-	userRepository     *repository.UserRepository
+	GinEngine            *gin.Engine
+	config               *config.AppConfig
+	categoryRepository   *repository.CategoryRepository
+	expenseRepository    *repository.ExpenseRepository
+	userRepository       *repository.UserRepository
+	statisticsRepository *repository.StatisticsRepository
 }
 
 type RouterRepoConfig struct {
-	CategoryRepository *repository.CategoryRepository
-	ExpenseRepository  *repository.ExpenseRepository
-	UserRepository     *repository.UserRepository
+	CategoryRepository   *repository.CategoryRepository
+	ExpenseRepository    *repository.ExpenseRepository
+	UserRepository       *repository.UserRepository
+	StatisticsRepository *repository.StatisticsRepository
 }
 
 func InitRouter(cnf *config.AppConfig, rrC *RouterRepoConfig) *AppRouter {
@@ -27,11 +29,12 @@ func InitRouter(cnf *config.AppConfig, rrC *RouterRepoConfig) *AppRouter {
 		gin.SetMode(gin.ReleaseMode)
 	}
 	return &AppRouter{
-		GinEngine:          gin.Default(),
-		config:             cnf,
-		categoryRepository: rrC.CategoryRepository,
-		expenseRepository:  rrC.ExpenseRepository,
-		userRepository:     rrC.UserRepository,
+		GinEngine:            gin.Default(),
+		config:               cnf,
+		categoryRepository:   rrC.CategoryRepository,
+		expenseRepository:    rrC.ExpenseRepository,
+		userRepository:       rrC.UserRepository,
+		statisticsRepository: rrC.StatisticsRepository,
 	}
 }
 

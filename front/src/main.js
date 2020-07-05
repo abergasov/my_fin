@@ -11,6 +11,7 @@ import vuetify from '@/plugins/vuetify' // path to vuetify export
 Vue.use(VueRouter);
 Vue.use(require('vue-moment'));
 const axios = require('axios').default;
+const Chart = require('chart.js');
 
 import Fingerprint2 from "fingerprintjs2"
 let hash = require('object-hash');

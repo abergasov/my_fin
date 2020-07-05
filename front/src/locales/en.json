@@ -9,6 +9,8 @@
   "categories_updated_error": "Error while categories updated",
 
   "add_expense": "Add expense",
+  "graph_label_expense": "expenses",
+  "graph_label_incoming": "incoming",
   "add_income": "Add income",
   "capital_change": "Capital change",
   "capital_change_add": "Add",

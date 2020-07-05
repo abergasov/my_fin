@@ -18,9 +18,10 @@ func main() {
 	}
 
 	router := routes.InitRouter(appConf, &routes.RouterRepoConfig{
-		CategoryRepository: repository.InitCategoryRepository(dbConnection),
-		ExpenseRepository:  repository.InitExpenseRepository(dbConnection),
-		UserRepository:     repository.InitUserRepository(dbConnection, appConf.JWTKey, appConf.JWTLive),
+		CategoryRepository:   repository.InitCategoryRepository(dbConnection),
+		ExpenseRepository:    repository.InitExpenseRepository(dbConnection),
+		UserRepository:       repository.InitUserRepository(dbConnection, appConf.JWTKey, appConf.JWTLive),
+		StatisticsRepository: repository.InitStatisticsRepository(dbConnection),
 	})
 
 	router.GinEngine.GET("/api/ping", func(c *gin.Context) {
@@ -38,6 +39,8 @@ func main() {
 		userData.POST("user_category/update", router.UpdateUserCategories)
 		userData.POST("expense/add", router.AddExpense)
 		userData.POST("expense/list", router.GetExpense)
+
+		userData.POST("statistics/list", router.IEMonth)
 	}
 	log.Fatal(router.GinEngine.Run(":8080"))
 }

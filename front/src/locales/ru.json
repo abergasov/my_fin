@@ -9,6 +9,8 @@
   "categories_updated_error": "Ошибка во время обновленя категорий",
 
   "add_expense": "Добавить расход",
+  "graph_label_expense": "расходы",
+  "graph_label_incoming": "доходы",
   "add_income": "Добавить приход",
   "capital_change": "Изменения капитала",
   "capital_change_add": "Добавить",

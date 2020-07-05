@@ -5,6 +5,9 @@
         <money-change></money-change>
       </v-col>
       <v-col cols="12" sm="12" md="4" lg="3">
+        <EIRadar></EIRadar>
+      </v-col>
+      <v-col cols="12" sm="12" md="4" lg="3">
         <router-link to="/">Home</router-link> |
         <router-link to="/medium">Medium</router-link>
         <router-view />
@@ -17,8 +20,9 @@
 <script>
   import ExpensesTable from "./widgets/ExpensesTable";
   import MoneyChange from "./widgets/MoneyChange";
+  import EIRadar from "./widgets/EIRadar";
   export default {
-    components: {ExpensesTable, MoneyChange},
+    components: {ExpensesTable, MoneyChange, EIRadar},
     name: 'AppHome',
     data () {
       return {
