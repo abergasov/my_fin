@@ -39,7 +39,7 @@
                       }],
 
                       labels: [
-                          this.$t('graph_label_incoming'),
+                          this.$t('graph_label_incoming') + ' ' + data[0],
                           this.$t('graph_label_expense') + ' ' + percent + '%',
                       ]
                   },

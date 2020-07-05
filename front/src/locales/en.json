@@ -10,7 +10,7 @@
 
   "add_expense": "Add expense",
   "graph_label_expense": "expenses",
-  "graph_label_incoming": "incoming",
+  "graph_label_incoming": "balance",
   "add_income": "Add income",
   "capital_change": "Capital change",
   "capital_change_add": "Add",

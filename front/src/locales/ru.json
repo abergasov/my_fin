@@ -10,7 +10,7 @@
 
   "add_expense": "Добавить расход",
   "graph_label_expense": "расходы",
-  "graph_label_incoming": "доходы",
+  "graph_label_incoming": "остаток",
   "add_income": "Добавить приход",
   "capital_change": "Изменения капитала",
   "capital_change_add": "Добавить",

@@ -46,7 +46,7 @@ func (sr *StatisticsRepository) RadarCount(userId uint64) ([2]int, int) {
 
 	}
 	incomingSum = incomingSum - outgoingSum
-	percent := (outgoingSum / incomingSum) * 100
+	percent := int(float64(outgoingSum) / float64(incomingSum) * 100)
 	if incomingSum < 0 {
 		incomingSum = 0
 		percent = -percent
