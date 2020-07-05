@@ -1,5 +1,5 @@
 <template>
-    <canvas id="myChart"></canvas>
+    <canvas id="ei_radar"></canvas>
 </template>
 
 <script>
@@ -12,7 +12,7 @@
         },
         methods: {
             initChart(data, percent) {
-              let ctx = document.getElementById('myChart').getContext('2d');
+              let ctx = document.getElementById('ei_radar').getContext('2d');
               new Chart(ctx, {
                   type: 'pie',
                   data: {
@@ -43,7 +43,15 @@
                           this.$t('graph_label_expense') + ' ' + percent + '%',
                       ]
                   },
-                  options: {}
+                  options: {
+                      legend: {
+                          position: 'right',
+                      },
+                      title: {
+                          display: true,
+                          text: this.$t('last_30_days')
+                      }
+                  }
               });
           },
 
