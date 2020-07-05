@@ -16,12 +16,12 @@ func InitStatisticsRepository(db *data_provider.DBAdapter) *StatisticsRepository
 	return &StatisticsRepository{db: db}
 }
 
-func (sr *StatisticsRepository) RadarCount(userId uint64) [2]int {
+func (sr *StatisticsRepository) RadarCount(userId uint64) ([2]int, int) {
 	sqlQ := "SELECT SUM(amount), type FROM expenses WHERE user_id = ? AND created_at BETWEEN ? AND ? GROUP BY type"
 	now := time.Now()
 	rows, err := sr.db.SelectQuery(sqlQ, userId, now.Unix()-30*86400, now.Unix())
 	if err != nil {
-		return [2]int{}
+		return [2]int{}, 0
 	}
 	if rows != nil {
 		defer rows.Close()
@@ -46,8 +46,10 @@ func (sr *StatisticsRepository) RadarCount(userId uint64) [2]int {
 
 	}
 	incomingSum = incomingSum - outgoingSum
+	percent := (outgoingSum / incomingSum) * 100
 	if incomingSum < 0 {
 		incomingSum = 0
+		percent = -percent
 	}
-	return [2]int{incomingSum, outgoingSum}
+	return [2]int{incomingSum, outgoingSum}, percent
 }

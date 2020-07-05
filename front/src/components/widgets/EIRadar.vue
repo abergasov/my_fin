@@ -11,7 +11,7 @@
            // }, 1000);
         },
         methods: {
-            initChart(data) {
+            initChart(data, percent) {
               let ctx = document.getElementById('myChart').getContext('2d');
               new Chart(ctx, {
                   type: 'pie',
@@ -40,7 +40,7 @@
 
                       labels: [
                           this.$t('graph_label_incoming'),
-                          this.$t('graph_label_expense'),
+                          this.$t('graph_label_expense') + ' ' + percent + '%',
                       ]
                   },
                   options: {}
@@ -53,7 +53,7 @@
                         if (!resp.ok) {
                             return
                         }
-                        this.initChart(resp.rows);
+                        this.initChart(resp.rows, resp.percent);
                     }
                 )
             }
