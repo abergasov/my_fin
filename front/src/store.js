@@ -11,6 +11,7 @@ const store = new Vuex.Store({
         dataLoading: false,
         categories_expenses: null,
         categories_incoming: null,
+        categories_assets: null,
         expenses: [],
         alertData: {
             display: false,
@@ -42,6 +43,9 @@ const store = new Vuex.Store({
         },
         setCategoriesIncoming (state, payload) {
             state.categories_incoming = payload;
+        },
+        setCategoriesAssets (state, payload) {
+            state.categories_assets = payload;
         },
         setAlert (state, payload) {
             console.log('set alert');

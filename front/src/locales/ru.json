@@ -8,8 +8,14 @@
   "categories_updated": "Категории обновлены",
   "categories_updated_error": "Ошибка во время обновленя категорий",
 
+  "mandatory": "(обязательный)",
+  "bank_deposit": "Вклад в банке",
+  "crypto_asset": "Криптовалюта",
+  "asset_actions": "Акции",
+
   "add_expense": "Добавить расход",
   "graph_label_expense": "расходы",
+  "graph_label_expense_mandatory": "обязательные расходы",
   "graph_label_incoming": "остаток",
   "last_30_days": "За последние 30 дней",
   "add_income": "Добавить приход",

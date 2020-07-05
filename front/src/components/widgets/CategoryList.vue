@@ -18,13 +18,13 @@
                 <v-row>
                     <v-text-field v-model="c.title" :label="$t('new_category_name')" full-width hide-details="auto">
                         <v-icon slot="prepend" color="error" @click="remove(c.id)">mdi-minus</v-icon>
-                        <v-checkbox slot="prepend" v-if="!incoming" v-model="c.cat_type" hide-details class="shrink mr-2 mt-0"></v-checkbox>
+                        <v-checkbox slot="prepend" v-if="!incoming" value="Em" v-model="c.cat_type" hide-details class="shrink mr-2 mt-0"></v-checkbox>
                         <v-icon slot="append" color="success" @click="addSubCategory(c.id)">mdi-plus</v-icon>
                     </v-text-field>
                 </v-row>
                 <v-text-field v-for="s in c.sub" :key="s.id" class="sub_draft" v-model="s.title" :label="$t('new_sub_category_name')" full-width hide-details="auto">
                     <v-icon slot="prepend" color="error" @click="remove(s.id, c.id)">mdi-minus</v-icon>
-                    <v-checkbox slot="prepend" v-if="!incoming" v-model="s.cat_type" hide-details class="shrink mr-2 mt-0"></v-checkbox>
+                    <v-checkbox slot="prepend" v-if="!incoming" value="Em" v-model="s.cat_type" hide-details class="shrink mr-2 mt-0"></v-checkbox>
                 </v-text-field>
             </div>
         </v-card>
@@ -123,7 +123,7 @@
             getNewCategory() {
                 return {
                     title: '',
-                    cat_type: false,
+                    cat_type: '',
                     id: Math.floor(Math.random() * 10000) + 100, //random from 100 to 100000
                     sub: [],
                 };

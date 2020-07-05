@@ -16,10 +16,10 @@ func (ar *AppRouter) AddExpense(c *gin.Context) {
 		return
 	}
 	userId := ar.getUserIdFromRequest(c)
-	c.JSON(http.StatusOK, gin.H{"ok": ar.expenseRepository.AddExpense(userId, &e)})
+	c.JSON(http.StatusOK, gin.H{"ok": ar.expenseRepo.AddExpense(userId, &e)})
 }
 
 func (ar *AppRouter) GetExpense(c *gin.Context) {
 	userId := ar.getUserIdFromRequest(c)
-	c.JSON(http.StatusOK, gin.H{"ok": true, "rows": ar.expenseRepository.GetExpense(userId)})
+	c.JSON(http.StatusOK, gin.H{"ok": true, "rows": ar.expenseRepo.GetExpense(userId)})
 }

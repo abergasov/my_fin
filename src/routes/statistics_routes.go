@@ -7,6 +7,6 @@ import (
 
 func (ar *AppRouter) IEMonth(c *gin.Context) {
 	userId := ar.getUserIdFromRequest(c)
-	data, percent := ar.statisticsRepository.RadarCount(userId)
-	c.JSON(http.StatusOK, gin.H{"ok": true, "rows": data, "percent": percent})
+	data, percent, percentOptional := ar.statisticsRepo.RadarCount(userId)
+	c.JSON(http.StatusOK, gin.H{"ok": true, "rows": data, "percent": percent, "percent_optional": percentOptional})
 }

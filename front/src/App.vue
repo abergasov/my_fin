@@ -198,6 +198,7 @@
             if (data.ok) {
               this.$store.commit('setCategoriesIncoming', data.categories_incoming || []);
               this.$store.commit('setCategoriesExpenses', data.categories || []);
+              this.$store.commit('setCategoriesAssets', data.assets || []);
             }
           })
       }

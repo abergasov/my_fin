@@ -1,11 +1,11 @@
 <template>
     <div>
         <v-card outlined>
-            <v-card-title class="headline">{{ $t('capital_change') }}</v-card-title>
             <v-card-actions>
                 <ul class="actions_list">
                     <li><v-btn @click="addIncome" x-large color="success" block>{{ $t('add_income') }}</v-btn></li>
                     <li><v-btn @click="addExpense" x-large color="error" block>{{ $t('add_expense') }}</v-btn></li>
+                    <li><AssetChange></AssetChange></li>
                 </ul>
             </v-card-actions>
         </v-card>
@@ -48,12 +48,18 @@
 </template>
 
 <script>
+    import AssetChange from './AssetChange'
     export default {
+        components: {
+            AssetChange
+        },
         name: "MoneyChange",
         data () {
             return {
                 dialog: false,
+                dialog_asset: false,
                 incoming: false,
+                active: false,
                 expense: false,
                 category: null,
                 amount: '',
@@ -61,6 +67,9 @@
             }
         },
         computed: {
+            asset_category() {
+                return this.$store.state.categories_assets;
+            },
             categories() {
                 return this.incoming ? this.$store.state.categories_incoming : this.$store.state.categories_expenses;
             },
@@ -78,10 +87,16 @@
                 this.dialog = true;
                 this.expense = true;
             },
+            addAsset() {
+                this.dialog_asset = true;
+                this.active = true;
+            },
             closeAdd() {
+                this.dialog_asset = false;
                 this.dialog = false;
                 this.incoming = false;
                 this.expense = false;
+                this.active = false;
                 this.category = null;
                 this.amount = '';
                 this.commentary = '';
@@ -90,7 +105,7 @@
                 this.askBackend('data/expense/add', {
                     cat: +this.category,
                     amount: +this.amount,
-                    incoming: (this.incoming ? 'I' : 'E'),
+                    incoming: this.getType(+this.category),
                     commentary: this.commentary,
                 }).then(data => {
                     this.$store.commit('setAlert', {
@@ -101,6 +116,27 @@
                     });
                 });
                 this.closeAdd();
+            },
+            getType(catId) {
+                if (this.incoming) {
+                    return 'I';
+                }
+                let type = 'E';
+                for (let i = 0; i < this.categories.length; i++) {
+                    let po = this.categories[i];
+                    if (po.id === catId) {
+                        type = po.cat_type === 'Em' ? 'Em' : 'E';
+                        break;
+                    }
+                    for (let j = 0; j < po.sub.length; j++) {
+                        let o = po.sub[j];
+                        if (o.id === catId) {
+                            type = o.cat_type === 'Em' ? 'Em' : 'E';
+                            break;
+                        }
+                    }
+                }
+                return type;
             }
         }
     }

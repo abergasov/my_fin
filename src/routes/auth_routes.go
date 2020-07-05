@@ -18,13 +18,13 @@ func (ar *AppRouter) Login(c *gin.Context) {
 	}
 
 	//compare the user from the request, with the one we defined:
-	uR, valid := ar.userRepository.ValidateUser(u.Username, u.Password)
+	uR, valid := ar.userRepo.ValidateUser(u.Username, u.Password)
 	if !valid {
 		c.JSON(http.StatusUnauthorized, gin.H{"ok": false, "error": "Invalid login/password"})
 		return
 	}
 
-	tData, err := ar.userRepository.CreateToken(uR.ID, u.UserSign)
+	tData, err := ar.userRepo.CreateToken(uR.ID, u.UserSign)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"ok": false, "error": "Invalid login/password"})
 		return
@@ -40,7 +40,7 @@ func (ar *AppRouter) Register(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"ok": false, "error": "Invalid login/password"})
 		return
 	}
-	user, userExist, errR := ar.userRepository.RegisterUser(&u)
+	user, userExist, errR := ar.userRepo.RegisterUser(&u)
 	if errR != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"ok": false, "error": errR.Error()})
 		return
@@ -50,7 +50,7 @@ func (ar *AppRouter) Register(c *gin.Context) {
 		return
 	}
 
-	tData, err := ar.userRepository.CreateToken(user.ID, u.UserSign)
+	tData, err := ar.userRepo.CreateToken(user.ID, u.UserSign)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"ok": false, "error": "Error while register"})
 		return
@@ -81,8 +81,8 @@ func (ar *AppRouter) Refresh(c *gin.Context) {
 		return
 	}
 
-	if ar.userRepository.ValidateRefreshToken(t.UserId, tokenRefresh, c.GetHeader(fingerPrintHeader)) {
-		tData, err := ar.userRepository.CreateToken(uint64(t.UserId), c.GetHeader(fingerPrintHeader))
+	if ar.userRepo.ValidateRefreshToken(t.UserId, tokenRefresh, c.GetHeader(fingerPrintHeader)) {
+		tData, err := ar.userRepo.CreateToken(uint64(t.UserId), c.GetHeader(fingerPrintHeader))
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"ok": false})
 			return
@@ -114,7 +114,7 @@ func (ar *AppRouter) AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		uId, valid := ar.userRepository.ValidateToken(token)
+		uId, valid := ar.userRepo.ValidateToken(token)
 		if !valid {
 			c.JSON(http.StatusUnauthorized, gin.H{"ok": false, "error": "Invalid login/password"})
 			c.Abort()

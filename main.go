@@ -22,6 +22,7 @@ func main() {
 		ExpenseRepository:    repository.InitExpenseRepository(dbConnection),
 		UserRepository:       repository.InitUserRepository(dbConnection, appConf.JWTKey, appConf.JWTLive),
 		StatisticsRepository: repository.InitStatisticsRepository(dbConnection),
+		AssetsRepository:     repository.InitAssetsRepository(dbConnection),
 	})
 
 	router.GinEngine.GET("/api/ping", func(c *gin.Context) {

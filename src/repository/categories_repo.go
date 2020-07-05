@@ -8,9 +8,10 @@ import (
 )
 
 type Category struct {
-	Id    int64      `json:"id"`
-	Title string     `json:"title"`
-	Sub   []Category `json:"sub"` //child categories
+	Id           int64      `json:"id"`
+	Title        string     `json:"title"`
+	CategoryType string     `json:"cat_type"`
+	Sub          []Category `json:"sub"` //child categories
 }
 
 type CategoryRepository struct {
