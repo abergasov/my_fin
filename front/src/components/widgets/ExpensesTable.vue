@@ -1,9 +1,20 @@
 <template>
     <v-row no-gutters class="table_wrapper">
         <v-card outlined>
-            <v-card-title class="headline">{{ $t('changes') }}</v-card-title>
+            <v-card-title class="headline">
+                {{ $t('changes') }}
+                <v-spacer></v-spacer>
+                <v-text-field
+                        v-model="search"
+                        append-icon="mdi-magnify"
+                        :label="$t('search')"
+                        single-line
+                        hide-details
+                ></v-text-field>
+            </v-card-title>
             <v-data-table :headers="headers"
                           :items="rows"
+                          :search="search"
                           :loading="isLoading"
                           :sort-by="['calories', 'fat']"
                           :sort-desc="[false, true]"
@@ -20,6 +31,7 @@
         name: "ExpensesTable",
         data () {
             return {
+                search: '',
                 headers: [
                     { text: 'Category', value: 'cat_name' },
                     { text: 'Expense', value: 'amount_expense' },
