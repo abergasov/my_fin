@@ -50,8 +50,8 @@
                 let simplyCat = Object.assign(exCat, inCat);
                 for (let i = 0; i < rows.length; i++) {
                     let tmp = rows[i];
-                    tmp.amount_expense = tmp.incoming === 'E' ? '-' + tmp.amount : '';
-                    tmp.amount_incoming = tmp.incoming !== 'E' ? '+' + tmp.amount : '';
+                    tmp.amount_expense = (tmp.incoming === 'E' || tmp.incoming === 'Em') ? '-' + tmp.amount : '';
+                    tmp.amount_incoming = (tmp.incoming !== 'E' && tmp.incoming !== 'Em') ? '+' + tmp.amount : '';
                     tmp.cat_name = simplyCat[rows[i].cat];
                     tmp.created_at = this.$moment(+tmp.created_at * 1000).format('YYYY-MM-DD HH:mm');
                     mixed.push(tmp);
