@@ -9,15 +9,6 @@
                           :sort-desc="[false, true]"
                           multi-sort
                           class="elevation-1">
-                <template v-slot:item="props">
-                    <tr :class="getRowClassForType(props.item.incoming)">
-                        <td>{{props.item.cat_name}}</td>
-                        <td>{{ (props.item.incoming === 'E' ? '-' + props.item.amount : '')}}</td>
-                        <td>{{ (props.item.incoming !== 'E' ? '+' + props.item.amount : '')}}</td>
-                        <td>{{props.item.created_at}}</td>
-                        <td style="max-width: 150px">{{props.item.commentary}}</td>
-                    </tr>
-                </template>
             </v-data-table>
         </v-card>
     </v-row>
@@ -31,8 +22,8 @@
             return {
                 headers: [
                     { text: 'Category', value: 'cat_name' },
-                    { text: 'Expense', value: 'amount' },
-                    { text: 'Incoming', value: 'amount' },
+                    { text: 'Expense', value: 'amount_expense' },
+                    { text: 'Incoming', value: 'amount_incoming' },
                     { text: 'Created at', value: 'created_at' },
                     { text: 'Commentary', value: 'commentary' },
                 ],
@@ -47,6 +38,8 @@
                 let simplyCat = Object.assign(exCat, inCat);
                 for (let i = 0; i < rows.length; i++) {
                     let tmp = rows[i];
+                    tmp.amount_expense = tmp.incoming === 'E' ? '-' + tmp.amount : '';
+                    tmp.amount_incoming = tmp.incoming !== 'E' ? '+' + tmp.amount : '';
                     tmp.cat_name = simplyCat[rows[i].cat];
                     tmp.created_at = this.$moment(+tmp.created_at * 1000).format('YYYY-MM-DD HH:mm');
                     mixed.push(tmp);
