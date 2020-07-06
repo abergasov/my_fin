@@ -35,7 +35,7 @@
                     <v-divider></v-divider>
                     <v-text-field type="number" v-model="amount" :label="$t('amount')" class="amount_input" hide-details="auto"></v-text-field>
                     <v-divider></v-divider>
-                    <v-textarea filled :label="$t('commentary')" rows="2"></v-textarea>
+                    <v-textarea v-model="commentary" filled :label="$t('commentary')" rows="2"></v-textarea>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn @click="saveAdd" :color="(incoming ? 'success' : 'error')" :disabled="formValid()">
