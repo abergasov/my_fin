@@ -12,6 +12,9 @@
   "bank_deposit": "Вклад в банке",
   "crypto_asset": "Криптовалюта",
   "asset_actions": "Акции",
+  "add_debt": "Взять в долг",
+  "give_debt": "Дать в долг",
+  "debt_date": "Дата погашения долга",
 
   "add_expense": "Добавить расход",
   "graph_label_expense": "расходы",

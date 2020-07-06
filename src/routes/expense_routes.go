@@ -23,3 +23,15 @@ func (ar *AppRouter) GetExpense(c *gin.Context) {
 	userId := ar.getUserIdFromRequest(c)
 	c.JSON(http.StatusOK, gin.H{"ok": true, "rows": ar.expenseRepo.GetExpense(userId)})
 }
+
+func (ar *AppRouter) AddDebt(c *gin.Context) {
+	var d repository.Debt
+	decoder := json.NewDecoder(c.Request.Body)
+	err := decoder.Decode(&d)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"ok": false})
+		return
+	}
+	userId := ar.getUserIdFromRequest(c)
+	c.JSON(http.StatusOK, gin.H{"ok": ar.expenseRepo.AddDebt(userId, &d)})
+}

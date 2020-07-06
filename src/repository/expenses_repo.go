@@ -13,6 +13,17 @@ type Expense struct {
 	CreatedAt  int64   `json:"created_at"`
 }
 
+type Debt struct {
+	Amount      int64  `json:"amount"`
+	Commentary  string `json:"commentary"`
+	CreatedAt   int64  `json:"created_at"`
+	PaymentDate int64  `json:"payment_date"`
+	DebtType    int64  `json:"debt_type"`
+}
+
+const DebtTaken = 1
+const DebtGiven = 0
+
 type ExpenseRepository struct {
 	db *data_provider.DBAdapter
 }
@@ -55,4 +66,18 @@ func (cr *ExpenseRepository) GetExpense(userId uint64) *[]Expense {
 		resp = append(resp, e)
 	}
 	return &resp
+}
+
+func (cr *ExpenseRepository) AddDebt(userId uint64, d *Debt) bool {
+	timeNow := time.Now()
+	id := cr.db.InsertQuery("debts", map[string]interface{}{
+		"user_id":     userId,
+		"created_at":  timeNow.Unix(),
+		"amount":      d.Amount,
+		"commentary":  d.Commentary,
+		"until_date":  d.PaymentDate,
+		"debt_type":   d.DebtType,
+		"active_debt": 1,
+	})
+	return id > 0
 }

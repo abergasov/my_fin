@@ -60,3 +60,7 @@ func (sr *StatisticsRepository) RadarCount(userId uint64) ([3]int, int, int) {
 	}
 	return [3]int{incomingSum, outgoingSum, outgoingSumMandatory}, percent, percentMandatory
 }
+
+func (sr *StatisticsRepository) GroupedByCategory(userId uint64) interface{} {
+	return ""
+}

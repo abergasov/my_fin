@@ -39,9 +39,11 @@ func main() {
 		userData.POST("user_category/get", router.UserCategories)
 		userData.POST("user_category/update", router.UpdateUserCategories)
 		userData.POST("expense/add", router.AddExpense)
+		userData.POST("debt/add", router.AddDebt)
 		userData.POST("expense/list", router.GetExpense)
 
 		userData.POST("statistics/list", router.IEMonth)
+		userData.POST("statistics/group", router.Grouped)
 	}
 	log.Fatal(router.GinEngine.Run(":8080"))
 }
