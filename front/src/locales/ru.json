@@ -21,6 +21,7 @@
   "graph_label_expense": "расходы",
   "graph_label_expense_mandatory": "обязательные расходы",
   "graph_label_incoming": "остаток",
+  "table_label_incoming": "доход",
   "last_30_days": "За последние 30 дней",
   "add_income": "Добавить приход",
   "capital_change": "Изменения капитала",

@@ -36,6 +36,7 @@
                     { text: 'Category', value: 'cat_name' },
                     { text: 'Expense', value: 'amount_expense' },
                     { text: 'Incoming', value: 'amount_incoming' },
+                    { text: 'Type', value: 'type' },
                     { text: 'Created at', value: 'created_at' },
                     { text: 'Commentary', value: 'commentary' },
                 ],
@@ -53,6 +54,7 @@
                     tmp.amount_expense = (tmp.incoming === 'E' || tmp.incoming === 'Em') ? '-' + tmp.amount : '';
                     tmp.amount_incoming = (tmp.incoming !== 'E' && tmp.incoming !== 'Em') ? '+' + tmp.amount : '';
                     tmp.cat_name = simplyCat[rows[i].cat];
+                    tmp.type = this.getType(tmp.incoming);
                     tmp.created_at = this.$moment(+tmp.created_at * 1000).format('YYYY-MM-DD HH:mm');
                     mixed.push(tmp);
                 }
@@ -78,6 +80,17 @@
                     }
                 }
                 return rebuild;
+            },
+            getType(type) {
+                switch (type) {
+                    case 'E':
+                        return this.$t('graph_label_expense');
+                    case 'Em':
+                        return this.$t('graph_label_expense_mandatory');
+                    default:
+                        return this.$t('table_label_incoming');
+
+                }
             },
             getRowClassForType(type) {
                 switch (type) {

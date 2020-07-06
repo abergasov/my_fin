@@ -21,6 +21,7 @@
   "graph_label_expense": "expenses",
   "graph_label_expense_mandatory": "mandatory expenses",
   "graph_label_incoming": "balance",
+  "table_label_incoming": "incoming",
   "last_30_days": "Last 30 days",
   "add_income": "Add income",
   "capital_change": "Capital change",
