@@ -13,6 +13,7 @@
                 ></v-text-field>
             </v-card-title>
             <v-data-table :headers="headers"
+                          ref="tableEl"
                           :items="rows"
                           :search="search"
                           :loading="isLoading"
@@ -20,13 +21,19 @@
                           :sort-desc="[false, true]"
                           multi-sort
                           class="elevation-1">
+                <template slot="body.append">
+                    <tr class="pink--text">
+                        <th class="title">Totals</th>
+                        <th class="title">{{ total_ex_sum }}</th>
+                        <th class="title">{{ total_in_sum }}</th>
+                    </tr>
+                </template>
             </v-data-table>
         </v-card>
     </v-row>
 </template>
 
 <script>
-    import moment from "moment";
     export default {
         name: "ExpensesTable",
         data () {
@@ -40,7 +47,12 @@
                     { text: 'Created at', value: 'created_at' },
                     { text: 'Commentary', value: 'commentary' },
                 ],
+                total_ex_sum: '',
+                total_in_sum: '',
             }
+        },
+        mounted() {
+            this.calculateTotal(1500);
         },
         computed: {
             rows() {
@@ -70,7 +82,19 @@
                 return this.$store.state.categories_incoming || [];
             },
         },
+        watch: {
+            search() {
+                this.calculateTotal();
+            }
+        },
         methods: {
+            calculateTotal(timeout) {
+                let time = timeout || 400;
+                setTimeout(() => {
+                    this.total_ex_sum = this.sumField('amount_expense');
+                    this.total_in_sum = this.sumField('amount_incoming');
+                }, time)
+            },
             simplyCat(ct) {
                 let rebuild = {};
                 for (let i of ct) {
@@ -92,6 +116,26 @@
 
                 }
             },
+
+            sumField(key) {
+                if (!this.$refs.tableEl) {
+                    return
+                }
+                if (!this.$refs.tableEl.$children.length > 0) {
+                    return
+                }
+                if (!this.$refs.tableEl.$children[0].computedItems.length > 0) {
+                    return
+                }
+
+                return this.$refs.tableEl.$children[0].computedItems.reduce((accumulator, currentValue) => {
+                    if (currentValue[key].length > 0) {
+                        return accumulator + Math.abs(currentValue[key]);
+                    }
+                    return accumulator;
+                }, 0);
+            },
+
             getRowClassForType(type) {
                 switch (type) {
                     case 'E'://expenses
