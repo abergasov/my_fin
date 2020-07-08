@@ -7,7 +7,7 @@
             </ul>
             <v-spacer></v-spacer>
             <v-chip class="ma-2" @click="debt_list = true" outlined color="teal" text-color="white">
-                <v-avatar v-if="debts.length > 0" left class="green darken-4">{{ debts.length }}</v-avatar>
+                <v-avatar v-if="countActive() > 0" left class="green darken-4">{{ countActive() }}</v-avatar>
                 {{ $t('debts') }}
             </v-chip>
         </v-card-actions>
@@ -155,6 +155,18 @@
             },
         },
         methods: {
+            countActive() {
+                let c = 0;
+                for (let i in this.debts) {
+                    if (!this.debts.hasOwnProperty(i)) {
+                        continue;
+                    }
+                    if (this.debts[i].active_debt !== 1) {
+                        c += 1;
+                    }
+                }
+                return c;
+            },
             editItem(item) {
                 this.edited_debt_item = {
                     commentary: item.commentary,
