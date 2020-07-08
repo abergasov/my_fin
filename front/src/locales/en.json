@@ -23,6 +23,8 @@
   "debt_type_credit": "Debtor",
   "debt_type_debt": "Debt",
   "active_debt": "Paid off",
+  "change_debt_status": "Change status",
+  "debt_payed": "Debt payed",
 
   "add_expense": "Add expense",
   "graph_label_expense": "expenses",

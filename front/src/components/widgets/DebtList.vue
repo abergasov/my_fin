@@ -30,6 +30,36 @@
                                   :search="search"
                                   :loading="isLoading"
                     >
+                        <template v-slot:top>
+                            <v-dialog v-if="edited_debt_item" v-model="debt_edit_dialog" max-width="500px">
+                                <v-card>
+                                    <v-card-title>
+                                        <span class="headline">{{ $t('change_debt_status') }}</span>
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-container>
+                                            <v-row>
+                                                <v-col cols="4">{{ edited_debt_item.amount }}</v-col>
+                                                <v-col cols="8">
+                                                    <p class="font-weight-regular">{{ edited_debt_item.commentary }}</p>
+                                                </v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col cols="12" sm="12" md="12">
+                                                    <v-switch v-model="edited_debt_item.active_debt" inset :label="$t('debt_payed')"></v-switch>
+                                                </v-col>
+                                            </v-row>
+                                        </v-container>
+                                    </v-card-text>
+
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="blue darken-1" text @click="closeDebtItem">Cancel</v-btn>
+                                        <v-btn color="blue darken-1" text @click="saveDebtItem">Save</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </template>
                         <template v-slot:item.amount="{ item }">
                             <v-chip v-if="item.debt_type !== 1 && +item.active_debt !== 1" color="error" class="debt_chip" dark>
                                 {{ item.amount }}
@@ -37,7 +67,10 @@
                             <span v-else>{{ item.amount }}</span>
                         </template>
                         <template v-slot:item.active_debt="{ item }">
-                            <v-simple-checkbox v-model="item.active_debt" disabled></v-simple-checkbox>
+                            <v-simple-checkbox v-model="+item.active_debt !== 1" disabled></v-simple-checkbox>
+                        </template>
+                        <template v-slot:item.edit_it="{ item }">
+                            <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
                         </template>
                     </v-data-table>
                 </v-card-text>
@@ -87,7 +120,10 @@
                     { text: this.$t('commentary'), value: 'commentary' },
                     { text: this.$t('debt_date'), value: 'payment_date_h' },
                     { text: this.$t('active_debt'), value: 'active_debt' },
+                    { text: '', value: 'edit_it' },
                 ],
+                debt_edit_dialog: false,
+                edited_debt_item: null,
                 debt_dialog: false,
                 debt_list: false,
                 incoming: false,
@@ -119,6 +155,34 @@
             },
         },
         methods: {
+            editItem(item) {
+                this.edited_debt_item = {
+                    commentary: item.commentary,
+                    active_debt: +item.active_debt !== 1,
+                    amount: +item.amount,
+                    debt_id: item.debt_id,
+                };
+                this.debt_edit_dialog = true;
+            },
+            closeDebtItem() {
+                this.edited_debt_item = null;
+                this.debt_edit_dialog = false;
+            },
+            saveDebtItem() {
+                this.askBackend('data/debt/pay', {
+                    'debt_id': this.edited_debt_item.debt_id,
+                    'debt_active': (this.edited_debt_item.active_debt ? 0 : 1),
+                }).then(
+                    resp => {
+                        if (resp.ok) {
+                            this.$store.commit('setDebts', resp.debts);
+                        }
+                    }
+                )
+
+                this.closeDebtItem();
+            },
+
             openDialog(type) {
                 this.incoming = type !== 'give';
                 this.debt_dialog = true;

@@ -14,6 +14,8 @@
   "debt_type_credit": "Должник",
   "debt_type_debt": "Задолженность",
   "active_debt": "Погашен",
+  "change_debt_status": "Изменение статуса",
+  "debt_payed": "Долг погашен",
 
   "search": "Поиск",
   "mandatory": "(обязательный)",

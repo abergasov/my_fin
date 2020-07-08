@@ -45,3 +45,22 @@ func (ar *AppRouter) AddDebt(c *gin.Context) {
 	}
 	c.JSON(http.StatusInternalServerError, gin.H{"ok": result})
 }
+
+func (ar *AppRouter) PayDebt(c *gin.Context) {
+	userId := ar.getUserIdFromRequest(c)
+	var d struct {
+		DebtId     int64 `json:"debt_id"`
+		DebtActive int64 `json:"debt_active"`
+	}
+	decoder := json.NewDecoder(c.Request.Body)
+	err := decoder.Decode(&d)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"ok": false})
+		return
+	}
+	if ar.expenseRepo.PayDebts(userId, d.DebtId, d.DebtActive) {
+		c.JSON(http.StatusOK, gin.H{"ok": true, "debts": ar.expenseRepo.GetDebts(userId)})
+		return
+	}
+	c.JSON(http.StatusInternalServerError, gin.H{"ok": false})
+}

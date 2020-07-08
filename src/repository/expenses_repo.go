@@ -85,8 +85,13 @@ func (cr *ExpenseRepository) AddDebt(userId uint64, d *Debt) bool {
 	return id > 0
 }
 
+func (cr *ExpenseRepository) PayDebts(userId uint64, debtId int64, status int64) bool {
+	_, e := cr.db.Exec("UPDATE debts SET active_debt = ? WHERE d_id = ? AND user_id = ?", status, debtId, userId)
+	return e == nil
+}
+
 func (cr *ExpenseRepository) GetDebts(userId uint64) *[]Debt {
-	sqlD := "SELECT d_id, created_at, amount, until_date, commentary, debt_type FROM debts d WHERE d.user_id = ? AND d.active_debt = 1"
+	sqlD := "SELECT d_id, created_at, amount, until_date, commentary, debt_type, active_debt FROM debts d WHERE d.user_id = ?"
 	rows, err := cr.db.SelectQuery(sqlD, userId)
 
 	var resp []Debt
@@ -102,11 +107,13 @@ func (cr *ExpenseRepository) GetDebts(userId uint64) *[]Debt {
 		var d Debt
 
 		var tp []uint8
-		errS := rows.Scan(&d.DebtId, &d.CreatedAt, &d.Amount, &d.PaymentDate, &d.Commentary, &tp)
+		var ad []uint8
+		errS := rows.Scan(&d.DebtId, &d.CreatedAt, &d.Amount, &d.PaymentDate, &d.Commentary, &tp, &ad)
 		if errS != nil {
 			continue
 		}
 		d.DebtType = int64(tp[0])
+		d.ActiveDebt = int64(ad[0])
 		resp = append(resp, d)
 	}
 	return &resp
