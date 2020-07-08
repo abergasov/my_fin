@@ -13,6 +13,7 @@ const store = new Vuex.Store({
         categories_incoming: null,
         categories_assets: null,
         expenses: [],
+        debts: [],
         alertData: {
             display: false,
             text: '',
@@ -27,6 +28,9 @@ const store = new Vuex.Store({
 
         setUserId(state, payload) {
             state.auth_user = +payload;
+        },
+        setDebts(state, payload) {
+            state.debts = payload || [];
         },
         setAuthExpires(state, payload) {
             state.auth_expires = +payload;

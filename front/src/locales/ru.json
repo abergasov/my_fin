@@ -7,6 +7,13 @@
   "cancel": "Отмена",
   "categories_updated": "Категории обновлены",
   "categories_updated_error": "Ошибка во время обновленя категорий",
+  "debts": "Долги",
+  "debt_list": "Список долгов",
+  "created_at": "Дата создания",
+  "type": "Тип",
+  "debt_type_credit": "Должник",
+  "debt_type_debt": "Задолженность",
+  "active_debt": "Погашен",
 
   "search": "Поиск",
   "mandatory": "(обязательный)",

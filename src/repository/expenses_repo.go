@@ -14,11 +14,13 @@ type Expense struct {
 }
 
 type Debt struct {
+	DebtId      int64  `json:"debt_id"`
 	Amount      int64  `json:"amount"`
 	Commentary  string `json:"commentary"`
 	CreatedAt   int64  `json:"created_at"`
 	PaymentDate int64  `json:"payment_date"`
 	DebtType    int64  `json:"debt_type"`
+	ActiveDebt  int64  `json:"active_debt"`
 }
 
 const DebtTaken = 1
@@ -49,14 +51,15 @@ func (cr *ExpenseRepository) GetExpense(userId uint64) *[]Expense {
 	sqlR := "SELECT created_at, category, amount, commentary, type FROM expenses WHERE user_id = ? ORDER BY e_id DESC LIMIT 2000"
 	rows, err := cr.db.SelectQuery(sqlR, userId)
 
-	if rows != nil {
-		defer rows.Close()
-	}
-
 	var resp []Expense
 	if err != nil {
 		return &resp
 	}
+
+	if rows != nil {
+		defer rows.Close()
+	}
+
 	for rows.Next() {
 		var e Expense
 		errS := rows.Scan(&e.CreatedAt, &e.Category, &e.Amount, &e.Commentary, &e.Incoming)
@@ -80,4 +83,31 @@ func (cr *ExpenseRepository) AddDebt(userId uint64, d *Debt) bool {
 		"active_debt": 1,
 	})
 	return id > 0
+}
+
+func (cr *ExpenseRepository) GetDebts(userId uint64) *[]Debt {
+	sqlD := "SELECT d_id, created_at, amount, until_date, commentary, debt_type FROM debts d WHERE d.user_id = ? AND d.active_debt = 1"
+	rows, err := cr.db.SelectQuery(sqlD, userId)
+
+	var resp []Debt
+	if err != nil {
+		return &resp
+	}
+
+	if rows != nil {
+		defer rows.Close()
+	}
+
+	for rows.Next() {
+		var d Debt
+
+		var tp []uint8
+		errS := rows.Scan(&d.DebtId, &d.CreatedAt, &d.Amount, &d.PaymentDate, &d.Commentary, &tp)
+		if errS != nil {
+			continue
+		}
+		d.DebtType = int64(tp[0])
+		resp = append(resp, d)
+	}
+	return &resp
 }

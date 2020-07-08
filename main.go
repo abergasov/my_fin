@@ -40,6 +40,7 @@ func main() {
 		userData.POST("user_category/update", router.UpdateUserCategories)
 		userData.POST("expense/add", router.AddExpense)
 		userData.POST("debt/add", router.AddDebt)
+		userData.POST("debt/get", router.GetDebts)
 		userData.POST("expense/list", router.GetExpense)
 
 		userData.POST("statistics/list", router.IEMonth)

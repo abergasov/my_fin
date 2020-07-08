@@ -24,6 +24,11 @@ func (ar *AppRouter) GetExpense(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"ok": true, "rows": ar.expenseRepo.GetExpense(userId)})
 }
 
+func (ar *AppRouter) GetDebts(c *gin.Context) {
+	userId := ar.getUserIdFromRequest(c)
+	c.JSON(http.StatusOK, gin.H{"ok": true, "debts": ar.expenseRepo.GetDebts(userId)})
+}
+
 func (ar *AppRouter) AddDebt(c *gin.Context) {
 	var d repository.Debt
 	decoder := json.NewDecoder(c.Request.Body)
@@ -33,5 +38,10 @@ func (ar *AppRouter) AddDebt(c *gin.Context) {
 		return
 	}
 	userId := ar.getUserIdFromRequest(c)
-	c.JSON(http.StatusOK, gin.H{"ok": ar.expenseRepo.AddDebt(userId, &d)})
+	result := ar.expenseRepo.AddDebt(userId, &d)
+	if result {
+		c.JSON(http.StatusOK, gin.H{"ok": result, "debts": ar.expenseRepo.GetDebts(userId)})
+		return
+	}
+	c.JSON(http.StatusInternalServerError, gin.H{"ok": result})
 }

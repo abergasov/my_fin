@@ -16,6 +16,13 @@
   "add_debt": "Add debt",
   "give_debt": "Give debt",
   "debt_date": "Debt repayment date",
+  "debts": "Debts",
+  "debt_list": "Debts list",
+  "created_at": "Creted at",
+  "type": "Type",
+  "debt_type_credit": "Debtor",
+  "debt_type_debt": "Debt",
+  "active_debt": "Paid off",
 
   "add_expense": "Add expense",
   "graph_label_expense": "expenses",

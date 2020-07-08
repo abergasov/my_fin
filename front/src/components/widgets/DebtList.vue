@@ -5,7 +5,44 @@
                 <li><v-btn class="ma-2" @click="openDialog('add')" outlined color="success">{{ $t('add_debt') }}</v-btn></li>
                 <li><v-btn class="ma-2" @click="openDialog('give')" outlined color="error">{{ $t('give_debt') }}</v-btn></li>
             </ul>
+            <v-spacer></v-spacer>
+            <v-chip class="ma-2" @click="debt_list = true" outlined color="teal" text-color="white">
+                <v-avatar v-if="debts.length > 0" left class="green darken-4">{{ debts.length }}</v-avatar>
+                {{ $t('debts') }}
+            </v-chip>
         </v-card-actions>
+        <v-dialog v-model="debt_list"  max-width="800px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">{{ $t('debt_list') }}</span>
+                    <v-spacer></v-spacer>
+                    <v-text-field
+                            v-model="search"
+                            append-icon="mdi-magnify"
+                            :label="$t('search')"
+                            single-line
+                            hide-details
+                    ></v-text-field>
+                </v-card-title>
+                <v-card-text>
+                    <v-data-table :headers="debt_headers"
+                                  :items="debts"
+                                  :search="search"
+                                  :loading="isLoading"
+                    >
+                        <template v-slot:item.amount="{ item }">
+                            <v-chip v-if="item.debt_type !== 1 && +item.active_debt !== 1" color="error" class="debt_chip" dark>
+                                {{ item.amount }}
+                            </v-chip>
+                            <span v-else>{{ item.amount }}</span>
+                        </template>
+                        <template v-slot:item.active_debt="{ item }">
+                            <v-simple-checkbox v-model="item.active_debt" disabled></v-simple-checkbox>
+                        </template>
+                    </v-data-table>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
         <v-dialog v-model="debt_dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
             <v-card>
                 <v-toolbar :color="this.incoming ? 'success' : 'error'">
@@ -42,12 +79,44 @@
         name: "DebtList",
         data() {
             return {
+                search: '',
+                debt_headers: [
+                    { text: this.$t('amount'), value: 'amount' },
+                    { text: this.$t('type'), value: 'type_h' },
+                    { text: this.$t('created_at'), value: 'created_at_h' },
+                    { text: this.$t('commentary'), value: 'commentary' },
+                    { text: this.$t('debt_date'), value: 'payment_date_h' },
+                    { text: this.$t('active_debt'), value: 'active_debt' },
+                ],
                 debt_dialog: false,
+                debt_list: false,
                 incoming: false,
                 amount: '',
                 commentary: '',
                 picker: '',
             }
+        },
+        created() {
+            this.askBackend('data/debt/get', {}).then(
+                resp => {
+                    this.$store.commit('setDebts', resp.debts);
+                }
+            );
+        },
+        computed: {
+            debts() {
+                let rows = this.$store.state.debts;
+                for (let i = 0; i < rows.length; i++) {
+                    let tmp = rows[i];
+                    rows[i].type_h = +tmp.debt_type !== 1 ? this.$t('debt_type_credit') : this.$t('debt_type_debt');
+                    rows[i].created_at_h = this.$moment(+tmp.created_at * 1000).format('YYYY-MM-DD');
+                    rows[i].payment_date_h = this.$moment(+tmp.payment_date * 1000).format('YYYY-MM-DD');
+                }
+                return rows;
+            },
+            isLoading() {
+                return this.$store.state.dataLoading;
+            },
         },
         methods: {
             openDialog(type) {
@@ -70,6 +139,9 @@
                     commentary: this.commentary,
                     payment_date: this.$moment(this.picker).unix(),
                 }).then(data => {
+                    if (data.ok) {
+                        this.$store.commit('setDebts', data.debts);
+                    }
                     this.$store.commit('setAlert', {
                         display: true,
                         text: (data.ok ?  this.$t('added') : this.$t('not_added')),
@@ -96,5 +168,8 @@
         margin-top: 20px;
         margin-bottom: 20px;
         padding-bottom: 12px;
+    }
+    .debt_chip {
+        min-width: 63px;
     }
 </style>
