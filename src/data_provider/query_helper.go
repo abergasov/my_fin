@@ -13,7 +13,7 @@ type DBAdapter struct {
 }
 
 func InitConnection(conf *config.AppConfig) (*DBAdapter, error) {
-	connectStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", conf.DBUser, conf.DBPass, conf.DBHost, conf.DBPort, conf.DBName)
+	connectStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?interpolateParams=true", conf.DBUser, conf.DBPass, conf.DBHost, conf.DBPort, conf.DBName)
 	db, err := sql.Open("mysql", connectStr)
 	if err != nil {
 		return nil, err
