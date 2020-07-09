@@ -6,6 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"my_fin/config"
 	"strings"
+	"time"
 )
 
 type DBAdapter struct {
@@ -18,6 +19,19 @@ func InitConnection(conf *config.AppConfig) (*DBAdapter, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// число максимально открытых соединений до базы
+	db.SetMaxOpenConns(10)
+	//переподключаемся к бд каждую минуту
+	db.SetConnMaxLifetime(time.Minute)
+	//не более 3х соединений в спокойном состоянии
+	db.SetMaxIdleConns(3)
+
+	ep := db.Ping()
+	if ep != nil {
+		return nil, ep
+	}
+
 	return &DBAdapter{db: db}, nil
 }
 
