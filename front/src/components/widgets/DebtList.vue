@@ -161,7 +161,7 @@
                     if (!this.debts.hasOwnProperty(i)) {
                         continue;
                     }
-                    if (this.debts[i].active_debt !== 1) {
+                    if (this.debts[i].active_debt === 1) {
                         c += 1;
                     }
                 }
