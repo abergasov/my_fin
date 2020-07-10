@@ -20,7 +20,7 @@ BUILD_TIME=$(date -u '+%Y-%m-%d_%H:%M:%S')
 echo "$BUILD_TIME"
 echo "$BUILD_HASH"
 
-if go build main.go -ldflags "-X main.buildTime=${BUILD_TIME} -X main.buildHash=${BUILD_HASH}"; then
+if go build -ldflags="-X 'main.buildTime=${BUILD_TIME}' -X 'main.buildHash=${BUILD_HASH}'"; then
   echo "build ok"
   sudo service my_fin restart
 else
