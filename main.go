@@ -10,7 +10,14 @@ import (
 	"net/http"
 )
 
+var (
+	buildTime string = "_dev"
+	buildHash string = "_dev"
+)
+
 func main() {
+	log.Println("App build time:", buildTime)
+	log.Println("App build hash:", buildHash)
 	appConf := config.InitConf()
 	dbConnection, err := data_provider.InitConnection(appConf)
 	if err != nil {
