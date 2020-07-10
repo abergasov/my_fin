@@ -14,8 +14,14 @@ import (
 type User struct {
 	ID       uint64 `json:"id"`
 	Username string `json:"email"`
-	Password string `json:"password"`
-	UserSign string `json:"user_sign"`
+	Password string `json:"password,omitempty"`
+	UserSign string `json:"user_sign,omitempty"`
+
+	MandatoryPercent int64 `json:"mandatory_percent"`
+	LivePercent      int64 `json:"live_percent"`
+	BlackDayPercent  int64 `json:"black_day_percent"`
+	InvestPercent    int64 `json:"invest_percent"`
+	SpendingPercent  int64 `json:"spending_percent"`
 }
 
 type RegisterUser struct {
@@ -68,6 +74,13 @@ func (ur *UserRepository) RegisterUser(rU *RegisterUser) (u User, exist bool, er
 			return u, false, errors.New("42")
 		}
 		u.ID = uint64(ur.db.InsertQuery("users", map[string]interface{}{"login": rU.Email, "password_hash": passwordHash}))
+
+		u.MandatoryPercent = 30
+		u.LivePercent = 20
+		u.BlackDayPercent = 15
+		u.InvestPercent = 15
+		u.SpendingPercent = 20
+
 		ur.db.InsertQuery("user_category", map[string]interface{}{
 			"u_id":                u.ID,
 			"categories":          "",
@@ -84,9 +97,9 @@ func (ur *UserRepository) ValidateUser(login string, password string) (u User, r
 		return
 	}
 
-	row := ur.db.SelectRow("SELECT user_id, login, password_hash FROM users WHERE login = ?", login)
+	row := ur.db.SelectRow("SELECT user_id, login, password_hash, mandatory_percent, live_percent, black_day_percent, invest_percent, spending_percent FROM users WHERE login = ?", login)
 
-	errU := row.Scan(&u.ID, &u.Username, &u.Password)
+	errU := row.Scan(&u.ID, &u.Username, &u.Password, &u.MandatoryPercent, &u.LivePercent, &u.BlackDayPercent, &u.InvestPercent, &u.SpendingPercent)
 	if errU != nil && errU != sql.ErrNoRows {
 		return
 	}

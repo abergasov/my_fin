@@ -1,6 +1,7 @@
 import AppHome from '@/components/AppHome';
 const AppMedium = () => import('@/components/AppMedium');
 const AppCategories = () => import('@/components/AppCategories');
+const AppProfile = () => import('@/components/AppProfile');
 
 const routes = [
     {
@@ -17,6 +18,11 @@ const routes = [
         path: '/categories',
         name: 'categories',
         component: AppCategories
+    },
+    {
+        path: '/profile',
+        name: 'profile',
+        component: AppProfile
     },
 ];
 

@@ -31,7 +31,9 @@ func (ar *AppRouter) Login(c *gin.Context) {
 	}
 	ar.setSecretCookie(c, tokenCookie, tData.AccessToken)
 	ar.setSecretCookie(c, refreshCookie, tData.RefreshToken)
-	c.JSON(http.StatusOK, gin.H{"ok": true, "token": tData.AccessToken})
+	uR.Password = ""
+	uR.UserSign = ""
+	c.JSON(http.StatusOK, gin.H{"ok": true, "token": tData.AccessToken, "user": uR})
 }
 
 func (ar *AppRouter) Register(c *gin.Context) {
@@ -57,7 +59,7 @@ func (ar *AppRouter) Register(c *gin.Context) {
 	}
 	ar.setSecretCookie(c, tokenCookie, tData.AccessToken)
 	ar.setSecretCookie(c, refreshCookie, tData.RefreshToken)
-	c.JSON(http.StatusOK, gin.H{"ok": true, "token": tData.AccessToken})
+	c.JSON(http.StatusOK, gin.H{"ok": true, "token": tData.AccessToken, "user": user})
 }
 
 func (ar *AppRouter) Logout(c *gin.Context) {
