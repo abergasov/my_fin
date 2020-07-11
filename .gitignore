@@ -14,7 +14,7 @@
 # Dependency directories (remove the comment below to include it)
 # vendor/
 .idea/
-config/.env
+backend/config/.env
 helpers/vendor
 helpers/phinx.yml
 main
