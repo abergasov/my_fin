@@ -19,7 +19,7 @@ cd ..
 
 echo "build binary"
 
-cd backend || exit
+cd backend/money_data || exit
 
 if make build; then
   echo "build ok"
@@ -29,7 +29,7 @@ else
   exit 1
 fi
 
-cd ..
+cd ../..
 
 echo "build front js"
 

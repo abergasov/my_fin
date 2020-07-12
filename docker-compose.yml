@@ -1,0 +1,67 @@
+version: '3'
+
+volumes:
+  data_volume:
+
+services:
+
+  auth:
+    image: my_fin_auth:latest
+    build:
+      context: .
+      dockerfile: backend/auth/Dockerfile
+    restart: always
+    depends_on:
+      - "db"
+      - "webserver"
+    networks:
+      - app-network
+    command: ["/app/wait-for-it.sh", "db:3303", "--", "/app/my_fin_auth"]
+
+  app:
+    image: my_fin:latest
+    env_file:
+      - backend/money_data/config/.env
+    build:
+      context: .
+      dockerfile: backend/money_data/Dockerfile
+    restart: always
+    depends_on:
+      - "db"
+      - "webserver"
+    networks:
+      - app-network
+    command: ["/app/wait-for-it.sh", "db:3303", "--", "/app/my_fin"]
+
+  db:
+    image: mariadb
+    env_file:
+      - configs/common.env
+    container_name: db
+    restart: always
+    tty: true
+    ports:
+      - 3303:3306
+    volumes:
+      - data_volume:/var/lib/mysql/
+    networks:
+      - app-network
+
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: always
+    tty: true
+
+    volumes:
+      - ./configs/nginx:/etc/nginx/conf.d
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge

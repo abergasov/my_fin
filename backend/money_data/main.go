@@ -32,7 +32,7 @@ func main() {
 		AssetsRepository:     repository.InitAssetsRepository(dbConnection),
 	})
 
-	router.GinEngine.GET("/api/ping", func(c *gin.Context) {
+	router.GinEngine.GET("/api/data/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"ok": true})
 	})
 
