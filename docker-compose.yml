@@ -12,8 +12,8 @@ services:
       dockerfile: backend/auth/Dockerfile
     restart: always
     depends_on:
-      - "db"
-      - "webserver"
+      - dbMysql
+      - webserver
     networks:
       - app-network
     command: ["/app/wait-for-it.sh", "db:3303", "--", "/app/my_fin_auth"]
@@ -27,17 +27,17 @@ services:
       dockerfile: backend/money_data/Dockerfile
     restart: always
     depends_on:
-      - "db"
-      - "webserver"
+      - dbMysql
+      - webserver
     networks:
       - app-network
     command: ["/app/wait-for-it.sh", "db:3303", "--", "/app/my_fin"]
 
-  db:
+  dbMysql:
     image: mariadb
     env_file:
       - configs/common.env
-    container_name: db
+    container_name: dbMysql
     restart: always
     tty: true
     ports:
