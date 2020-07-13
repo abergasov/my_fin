@@ -7,19 +7,20 @@ services:
 
   auth:
     image: my_fin_auth:latest
+    container_name: app_auth.mf
     build:
       context: .
       dockerfile: backend/auth/Dockerfile
     restart: always
     depends_on:
       - dbMysql
-      - webserver
     networks:
       - app-network
     command: ["/app/wait-for-it.sh", "db:3303", "--", "/app/my_fin_auth"]
 
   app:
     image: my_fin:latest
+    container_name: app_main.mf
     env_file:
       - backend/money_data/config/.env
     build:
@@ -28,7 +29,6 @@ services:
     restart: always
     depends_on:
       - dbMysql
-      - webserver
     networks:
       - app-network
     command: ["/app/wait-for-it.sh", "db:3303", "--", "/app/my_fin"]
@@ -37,7 +37,7 @@ services:
     image: mariadb
     env_file:
       - configs/common.env
-    container_name: dbMysql
+    container_name: dbMysql.mf
     restart: always
     tty: true
     ports:
@@ -49,10 +49,12 @@ services:
 
   webserver:
     image: nginx:alpine
-    container_name: webserver
+    container_name: webserver.mf
     restart: always
     tty: true
-
+    depends_on:
+      - "app"
+      - "auth"
     volumes:
       - ./configs/nginx:/etc/nginx/conf.d
     ports:
