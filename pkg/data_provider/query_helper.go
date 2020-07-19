@@ -52,9 +52,10 @@ func (d *DBAdapter) InsertQuery(table string, params map[string]interface{}) (id
 	if len(params) == 0 {
 		return
 	}
-	var sqlP []string
-	var values []interface{}
-	var sqlPl []string
+
+	sqlP := make([]string, 0, len(params))
+	values := make([]interface{}, 0, len(params))
+	sqlPl := make([]string, 0, len(params))
 
 	for i, v := range params {
 		sqlP = append(sqlP, i)
