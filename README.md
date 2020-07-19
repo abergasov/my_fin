@@ -1,5 +1,22 @@
 # my_fin
 
+# Docker
+
+## Start 
+```shell script
+
+```
+
+## Stop it
+```shell script
+docker container stop $(docker container ls -q)
+```
+
+## Remove all
+```shell script
+docker rmi -f $(docker images -q)
+```
+
 # Dep update
 ``
 go mod vendor

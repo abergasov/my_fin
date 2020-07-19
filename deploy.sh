@@ -19,8 +19,6 @@ cd ..
 
 echo "build binary"
 
-cd backend/money_data || exit
-
 if make build; then
   echo "build ok"
   sudo service my_fin restart

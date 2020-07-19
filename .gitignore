@@ -19,6 +19,7 @@ helpers/vendor
 helpers/phinx.yml
 main
 configs/common.env
-/backend/money_data/config/.env
-/backend/auth/config/.env
 /configs/common.env
+/bin
+!/bin/.gitkeep
+configs/app_conf.yml

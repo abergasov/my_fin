@@ -1,0 +1,10 @@
+db_host: 127.0.0.1
+db_user: aHAjeK
+db_name: my_fin
+db_pass: AOifjwelmc8dw
+db_port: 3309
+prod_env: false
+jwt_key: akjlehyuiAUSDh2
+jwt_live: 30
+ssl_enable: false
+app_domain: localhost

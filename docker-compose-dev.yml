@@ -14,8 +14,6 @@ services:
     restart: always
     depends_on:
       - dbMysql
-    networks:
-      - app-network
     command: ["/app/wait-for-it.sh", "db:3303", "--", "/app/my_fin"]
 
   dbMysql:
@@ -29,25 +27,14 @@ services:
       - 3309:3306
     volumes:
       - data_volume:/var/lib/mysql/
-    networks:
-      - app-network
 
   webserver:
     image: nginx:alpine
     container_name: webserver.mf
     restart: always
     tty: true
-    depends_on:
-      - "app"
     volumes:
-      - ./configs/nginx:/etc/nginx/conf.d
+      - ./configs/nginx_dev:/etc/nginx/conf.d
     ports:
       - 80:80
       - 443:443
-    networks:
-      - app-network
-
-#Docker Networks
-networks:
-  app-network:
-    driver: bridge
