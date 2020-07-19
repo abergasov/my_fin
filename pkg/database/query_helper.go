@@ -1,4 +1,4 @@
-package data_provider
+package database
 
 import (
 	"database/sql"
@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	// Register some standard stuff
 	_ "github.com/go-sql-driver/mysql"
 )
 

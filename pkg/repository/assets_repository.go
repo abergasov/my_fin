@@ -1,14 +1,14 @@
 package repository
 
-import "my_fin/backend/pkg/data_provider"
+import "my_fin/backend/pkg/database"
 
 type AssetsRepository struct {
-	db *data_provider.DBAdapter
+	db *database.DBAdapter
 }
 
 type AssetType struct {
 	Title string `json:"title"`
-	ID    int64  `json:"title"`
+	ID    int64  `json:"id"`
 }
 
 var bankDeposit = AssetType{ID: 1, Title: "bank_deposit"}
@@ -17,7 +17,7 @@ var actions = AssetType{ID: 3, Title: "asset_actions"}
 
 var availableAssets []AssetType
 
-func InitAssetsRepository(db *data_provider.DBAdapter) *AssetsRepository {
+func InitAssetsRepository(db *database.DBAdapter) *AssetsRepository {
 	availableAssets = []AssetType{
 		bankDeposit, cryptoAsset, actions,
 	}

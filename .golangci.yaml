@@ -88,7 +88,7 @@ linters:
     - varcheck
     - whitespace
     - prealloc
-    - maligned
+    #- maligned
 
 service:
   golangci-lint-version: 1.21.x # use the fixed version to not introduce new linters unexpectedly

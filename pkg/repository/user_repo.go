@@ -3,7 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"my_fin/backend/pkg/data_provider"
+	"my_fin/backend/pkg/database"
 	"regexp"
 	"time"
 
@@ -43,10 +43,10 @@ var reEmail = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](
 type UserRepository struct {
 	jwtKey      string
 	jwtLiveTime int64
-	db          *data_provider.DBAdapter
+	db          *database.DBAdapter
 }
 
-func InitUserRepository(db *data_provider.DBAdapter, jwtKey string, jwtLive int64) *UserRepository {
+func InitUserRepository(db *database.DBAdapter, jwtKey string, jwtLive int64) *UserRepository {
 	return &UserRepository{
 		jwtKey:      jwtKey,
 		jwtLiveTime: jwtLive,
@@ -119,14 +119,17 @@ func (ur *UserRepository) generateRefreshToken(userID uint64, userSign string) (
 	ur.removeExpiredTokens(userID)
 	nowTime := time.Now()
 	uid := uuid.New()
-	ur.db.InsertQuery("users_refresh_tokens", map[string]interface{}{
+	iserted := ur.db.InsertQuery("users_refresh_tokens", map[string]interface{}{
 		"user_id":       userID,
 		"refresh_token": uid,
 		"fingerprint":   userSign,
 		"created_at":    nowTime.Unix(),
 		"expires_at":    nowTime.Unix() + 60*86400, // valid in 60 days
 	})
-	return uid.String(), nil
+	if iserted > 0 {
+		return uid.String(), nil
+	}
+	return "", errors.New("error set refresh token")
 }
 
 func (ur *UserRepository) removeExpiredTokens(userID interface{}) {

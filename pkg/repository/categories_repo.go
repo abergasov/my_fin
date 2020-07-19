@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"my_fin/backend/pkg/data_provider"
+	"my_fin/backend/pkg/database"
 )
 
 type Category struct {
@@ -15,10 +15,10 @@ type Category struct {
 }
 
 type CategoryRepository struct {
-	db *data_provider.DBAdapter
+	db *database.DBAdapter
 }
 
-func InitCategoryRepository(db *data_provider.DBAdapter) *CategoryRepository {
+func InitCategoryRepository(db *database.DBAdapter) *CategoryRepository {
 	return &CategoryRepository{db: db}
 }
 

@@ -2,7 +2,7 @@ package main
 
 import (
 	"my_fin/backend/pkg/config"
-	"my_fin/backend/pkg/data_provider"
+	"my_fin/backend/pkg/database"
 	"my_fin/backend/pkg/logger"
 	"my_fin/backend/pkg/middleware"
 	"my_fin/backend/pkg/repository"
@@ -20,7 +20,7 @@ var (
 func main() {
 	logger.InitLogger("MyFin App", buildHash, buildTime)
 	appConf := config.InitConf()
-	dbConnection, err := data_provider.InitConnection(appConf)
+	dbConnection, err := database.InitConnection(appConf)
 	if err != nil {
 		logger.Fatal("Error db connect", err)
 	}
@@ -53,19 +53,17 @@ func main() {
 	router.GinEngine.POST("/api/auth/refresh", router.Refresh)
 
 	userData := router.GinEngine.Group("/api/data")
-	{
-		userData.Use(middleware.AuthMiddleware(routerConf.UserRepository))
-		userData.POST("user_category/get", router.UserCategories)
-		userData.POST("user_category/update", router.UpdateUserCategories)
-		userData.POST("expense/add", router.AddExpense)
-		userData.POST("debt/add", router.AddDebt)
-		userData.POST("debt/get", router.GetDebts)
-		userData.POST("debt/pay", router.PayDebt)
-		userData.POST("expense/list", router.GetExpense)
+	userData.Use(middleware.AuthMiddleware(routerConf.UserRepository))
+	userData.POST("user_category/get", router.UserCategories)
+	userData.POST("user_category/update", router.UpdateUserCategories)
+	userData.POST("expense/add", router.AddExpense)
+	userData.POST("debt/add", router.AddDebt)
+	userData.POST("debt/get", router.GetDebts)
+	userData.POST("debt/pay", router.PayDebt)
+	userData.POST("expense/list", router.GetExpense)
 
-		userData.POST("statistics/list", router.IEMonth)
-		userData.POST("statistics/group", router.Grouped)
-	}
+	userData.POST("statistics/list", router.IEMonth)
+	userData.POST("statistics/group", router.Grouped)
 
 	logger.Info("Starting server at port 8080")
 

@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"my_fin/backend/pkg/data_provider"
+	"my_fin/backend/pkg/database"
 	"time"
 )
 
@@ -27,10 +27,10 @@ const DebtTaken = 1
 const DebtGiven = 0
 
 type ExpenseRepository struct {
-	db *data_provider.DBAdapter
+	db *database.DBAdapter
 }
 
-func InitExpenseRepository(db *data_provider.DBAdapter) *ExpenseRepository {
+func InitExpenseRepository(db *database.DBAdapter) *ExpenseRepository {
 	return &ExpenseRepository{db: db}
 }
 

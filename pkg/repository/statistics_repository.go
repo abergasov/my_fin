@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"my_fin/backend/pkg/data_provider"
+	"my_fin/backend/pkg/database"
 	"time"
 )
 
@@ -10,17 +10,17 @@ const ExpenseOutgoingType = "E"
 const ExpenseMandatoryOutgoingType = "Em"
 
 type StatisticsRepository struct {
-	db *data_provider.DBAdapter
+	db *database.DBAdapter
 }
 
-func InitStatisticsRepository(db *data_provider.DBAdapter) *StatisticsRepository {
+func InitStatisticsRepository(db *database.DBAdapter) *StatisticsRepository {
 	return &StatisticsRepository{db: db}
 }
 
-func (sr *StatisticsRepository) RadarCount(userId uint64) ([3]int, int, int) {
+func (sr *StatisticsRepository) RadarCount(userID uint64) (data [3]int, percent, percentMandatory int) {
 	sqlQ := "SELECT SUM(amount), type FROM expenses WHERE user_id = ? AND created_at BETWEEN ? AND ? GROUP BY type"
 	now := time.Now()
-	rows, err := sr.db.SelectQuery(sqlQ, userId, now.Unix()-30*86400, now.Unix())
+	rows, err := sr.db.SelectQuery(sqlQ, userID, now.Unix()-30*86400, now.Unix())
 	if err != nil {
 		return [3]int{}, 0, 0
 	}
@@ -49,8 +49,8 @@ func (sr *StatisticsRepository) RadarCount(userId uint64) ([3]int, int, int) {
 			outgoingSumMandatory = amount
 		}
 	}
-	percent := int(float64(outgoingSum) / float64(incomingSum) * 100)
-	percentMandatory := int(float64(outgoingSumMandatory) / float64(incomingSum) * 100)
+	percent = int(float64(outgoingSum) / float64(incomingSum) * 100)
+	percentMandatory = int(float64(outgoingSumMandatory) / float64(incomingSum) * 100)
 	incomingSum = incomingSum - outgoingSum - outgoingSumMandatory
 	if incomingSum < 0 {
 		incomingSum = 0

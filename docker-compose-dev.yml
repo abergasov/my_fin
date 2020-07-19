@@ -14,7 +14,7 @@ services:
     restart: always
     depends_on:
       - dbMysql
-    command: ["/app/wait-for-it.sh", "db:3303", "--", "/app/my_fin"]
+    command: ["/app/wait-for-it.sh", "database:3303", "--", "/app/my_fin"]
 
   dbMysql:
     image: mariadb
