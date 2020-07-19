@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"my_fin/backend/pkg/database"
+	"my_fin/backend/pkg/logger"
 )
 
 type Category struct {
@@ -30,8 +31,14 @@ func (cr *CategoryRepository) LoadCategories(userID uint64) (uCat, uICat []Categ
 	if err != nil && err != sql.ErrNoRows {
 		return
 	}
-	json.Unmarshal([]byte(catJSON), &uCat)
-	json.Unmarshal([]byte(catInJSON), &uICat)
+	euC := json.Unmarshal([]byte(catJSON), &uCat)
+	if euC != nil {
+		logger.Info("Return empty outgoing category list for user: ", userID)
+	}
+	euCI := json.Unmarshal([]byte(catInJSON), &uICat)
+	if euCI != nil {
+		logger.Info("Return empty incoming category list for user: ", userID)
+	}
 	return
 }
 
