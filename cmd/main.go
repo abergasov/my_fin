@@ -33,7 +33,12 @@ func main() {
 		AssetsRepository:     repository.InitAssetsRepository(dbConnection),
 	}
 
+	logger.Info("Config ok")
+	logger.Info("Init router")
+
 	router := routes.InitRouter(appConf, &routerConf)
+	logger.Info("Router ok")
+
 	router.GinEngine.GET("/api/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"ok":         true,
@@ -61,6 +66,9 @@ func main() {
 		userData.POST("statistics/list", router.IEMonth)
 		userData.POST("statistics/group", router.Grouped)
 	}
+
+	logger.Info("Starting server at port 8080")
+
 	errR := router.GinEngine.Run(":8080")
 	if errR != nil {
 		logger.Fatal("Common server error", errR)
