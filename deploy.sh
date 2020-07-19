@@ -27,8 +27,6 @@ else
   exit 1
 fi
 
-cd ../..
-
 echo "build front js"
 
 cd front || exit
