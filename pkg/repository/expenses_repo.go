@@ -14,7 +14,7 @@ type Expense struct {
 }
 
 type Debt struct {
-	DebtId      int64  `json:"debt_id"`
+	DebtID      int64  `json:"debt_id"`
 	Amount      int64  `json:"amount"`
 	Commentary  string `json:"commentary"`
 	CreatedAt   int64  `json:"created_at"`
@@ -34,10 +34,10 @@ func InitExpenseRepository(db *data_provider.DBAdapter) *ExpenseRepository {
 	return &ExpenseRepository{db: db}
 }
 
-func (cr *ExpenseRepository) AddExpense(userId uint64, expense *Expense) bool {
+func (cr *ExpenseRepository) AddExpense(userID uint64, expense *Expense) bool {
 	timeNow := time.Now()
 	id := cr.db.InsertQuery("expenses", map[string]interface{}{
-		"user_id":    userId,
+		"user_id":    userID,
 		"created_at": timeNow.Unix(),
 		"category":   expense.Category,
 		"amount":     expense.Amount,
@@ -47,9 +47,9 @@ func (cr *ExpenseRepository) AddExpense(userId uint64, expense *Expense) bool {
 	return id > 0
 }
 
-func (cr *ExpenseRepository) GetExpense(userId uint64) *[]Expense {
+func (cr *ExpenseRepository) GetExpense(userID uint64) *[]Expense {
 	sqlR := "SELECT created_at, category, amount, commentary, type FROM expenses WHERE user_id = ? ORDER BY e_id DESC LIMIT 2000"
-	rows, err := cr.db.SelectQuery(sqlR, userId)
+	rows, err := cr.db.SelectQuery(sqlR, userID)
 
 	var resp []Expense
 	if err != nil {
@@ -71,10 +71,10 @@ func (cr *ExpenseRepository) GetExpense(userId uint64) *[]Expense {
 	return &resp
 }
 
-func (cr *ExpenseRepository) AddDebt(userId uint64, d *Debt) bool {
+func (cr *ExpenseRepository) AddDebt(userID uint64, d *Debt) bool {
 	timeNow := time.Now()
 	id := cr.db.InsertQuery("debts", map[string]interface{}{
-		"user_id":     userId,
+		"user_id":     userID,
 		"created_at":  timeNow.Unix(),
 		"amount":      d.Amount,
 		"commentary":  d.Commentary,
@@ -85,14 +85,14 @@ func (cr *ExpenseRepository) AddDebt(userId uint64, d *Debt) bool {
 	return id > 0
 }
 
-func (cr *ExpenseRepository) PayDebts(userId uint64, debtId int64, status int64) bool {
-	_, e := cr.db.Exec("UPDATE debts SET active_debt = ? WHERE d_id = ? AND user_id = ?", status, debtId, userId)
+func (cr *ExpenseRepository) PayDebts(userID uint64, debtID, status int64) bool {
+	_, e := cr.db.Exec("UPDATE debts SET active_debt = ? WHERE d_id = ? AND user_id = ?", status, debtID, userID)
 	return e == nil
 }
 
-func (cr *ExpenseRepository) GetDebts(userId uint64) *[]Debt {
+func (cr *ExpenseRepository) GetDebts(userID uint64) *[]Debt {
 	sqlD := "SELECT d_id, created_at, amount, until_date, commentary, debt_type, active_debt FROM debts d WHERE d.user_id = ?"
-	rows, err := cr.db.SelectQuery(sqlD, userId)
+	rows, err := cr.db.SelectQuery(sqlD, userID)
 
 	var resp []Debt
 	if err != nil {
@@ -108,7 +108,7 @@ func (cr *ExpenseRepository) GetDebts(userId uint64) *[]Debt {
 
 		var tp []uint8
 		var ad []uint8
-		errS := rows.Scan(&d.DebtId, &d.CreatedAt, &d.Amount, &d.PaymentDate, &d.Commentary, &tp, &ad)
+		errS := rows.Scan(&d.DebtID, &d.CreatedAt, &d.Amount, &d.PaymentDate, &d.Commentary, &tp, &ad)
 		if errS != nil {
 			continue
 		}

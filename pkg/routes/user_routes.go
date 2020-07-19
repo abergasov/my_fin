@@ -2,14 +2,15 @@ package routes
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"my_fin/backend/pkg/repository"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (ar *AppRouter) UserCategories(c *gin.Context) {
-	userId := ar.getUserIdFromRequest(c)
-	uCat, uInCat := ar.categoryRepo.LoadCategories(userId)
+	userID := ar.getUserIDFromRequest(c)
+	uCat, uInCat := ar.categoryRepo.LoadCategories(userID)
 	c.JSON(http.StatusOK, gin.H{
 		"ok":                  true,
 		"categories":          uCat,
@@ -30,18 +31,17 @@ func (ar *AppRouter) UpdateUserCategories(c *gin.Context) {
 		return
 	}
 
-	userId := ar.getUserIdFromRequest(c)
+	userID := ar.getUserIDFromRequest(c)
 	tableKey := "categories"
 	cat := &p.Cat
 	if p.Cat == nil {
 		tableKey = "categories_incoming"
 		cat = &p.CatIncoming
 	}
-	if ar.categoryRepo.UpdateCategories(userId, cat, tableKey) {
-		uCat, uInCat := ar.categoryRepo.LoadCategories(userId)
+	if ar.categoryRepo.UpdateCategories(userID, cat, tableKey) {
+		uCat, uInCat := ar.categoryRepo.LoadCategories(userID)
 		c.JSON(http.StatusOK, gin.H{"ok": true, "categories": uCat, "categories_incoming": uInCat})
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"ok": false})
 	}
-
 }

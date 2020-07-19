@@ -45,5 +45,4 @@ func InitConf() *AppConfig {
 	}
 
 	return &cfg
-
 }

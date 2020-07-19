@@ -48,7 +48,6 @@ func (sr *StatisticsRepository) RadarCount(userId uint64) ([3]int, int, int) {
 		if typeE == ExpenseMandatoryOutgoingType {
 			outgoingSumMandatory = amount
 		}
-
 	}
 	percent := int(float64(outgoingSum) / float64(incomingSum) * 100)
 	percentMandatory := int(float64(outgoingSumMandatory) / float64(incomingSum) * 100)
@@ -61,6 +60,6 @@ func (sr *StatisticsRepository) RadarCount(userId uint64) ([3]int, int, int) {
 	return [3]int{incomingSum, outgoingSum, outgoingSumMandatory}, percent, percentMandatory
 }
 
-func (sr *StatisticsRepository) GroupedByCategory(userId uint64) interface{} {
+func (sr *StatisticsRepository) GroupedByCategory(userID uint64) interface{} {
 	return ""
 }

@@ -2,10 +2,11 @@ package routes
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"my_fin/backend/pkg/config"
 	"my_fin/backend/pkg/repository"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type AppRouter struct {
@@ -41,11 +42,11 @@ func InitRouter(cnf *config.AppConfig, rrC *RouterRepoConfig) *AppRouter {
 	}
 }
 
-func (ar *AppRouter) getUserIdFromRequest(c *gin.Context) uint64 {
-	userId := c.MustGet("user_id")
-	uId, err := strconv.Atoi(fmt.Sprintf("%v", userId))
+func (ar *AppRouter) getUserIDFromRequest(c *gin.Context) uint64 {
+	userID := c.MustGet("user_id")
+	uID, err := strconv.Atoi(fmt.Sprintf("%v", userID))
 	if err != nil {
 		return 0
 	}
-	return uint64(uId)
+	return uint64(uID)
 }

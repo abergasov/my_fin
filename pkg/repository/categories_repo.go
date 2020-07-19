@@ -8,10 +8,10 @@ import (
 )
 
 type Category struct {
-	Id           int64      `json:"id"`
+	ID           int64      `json:"id"`
 	Title        string     `json:"title"`
 	CategoryType string     `json:"cat_type"`
-	Sub          []Category `json:"sub"` //child categories
+	Sub          []Category `json:"sub"` // child categories
 }
 
 type CategoryRepository struct {
@@ -22,28 +22,25 @@ func InitCategoryRepository(db *data_provider.DBAdapter) *CategoryRepository {
 	return &CategoryRepository{db: db}
 }
 
-func (cr *CategoryRepository) LoadCategories(userId uint64) (uCat []Category, uICat []Category) {
-	var catJson string
-	var catInJson string
-	row := cr.db.SelectRow("SELECT categories, categories_incoming FROM user_category WHERE u_id = ?", userId)
-	err := row.Scan(&catJson, &catInJson)
+func (cr *CategoryRepository) LoadCategories(userID uint64) (uCat, uICat []Category) {
+	var catJSON string
+	var catInJSON string
+	row := cr.db.SelectRow("SELECT categories, categories_incoming FROM user_category WHERE u_id = ?", userID)
+	err := row.Scan(&catJSON, &catInJSON)
 	if err != nil && err != sql.ErrNoRows {
 		return
 	}
-	json.Unmarshal([]byte(catJson), &uCat)
-	json.Unmarshal([]byte(catInJson), &uICat)
+	json.Unmarshal([]byte(catJSON), &uCat)
+	json.Unmarshal([]byte(catInJSON), &uICat)
 	return
 }
 
-func (cr *CategoryRepository) UpdateCategories(userId uint64, payload *[]Category, tableKey string) bool {
+func (cr *CategoryRepository) UpdateCategories(userID uint64, payload *[]Category, tableKey string) bool {
 	sqlR := fmt.Sprintf("INSERT INTO user_category (u_id, %s) VALUES (?, ?) ON DUPLICATE KEY UPDATE %s = ?", tableKey, tableKey)
 	str, err := json.Marshal(payload)
 	if err != nil {
 		return false
 	}
-	_, e := cr.db.Exec(sqlR, userId, str, str)
-	if e != nil {
-		return false
-	}
-	return true
+	_, e := cr.db.Exec(sqlR, userID, str, str)
+	return e == nil
 }

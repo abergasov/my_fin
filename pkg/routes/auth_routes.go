@@ -1,14 +1,15 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
 	"my_fin/backend/pkg/repository"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (
-	refreshCookie = "rc"
-	tokenCookie   = "tc"
+	RefreshCookie = "rc"
+	TokenCookie   = "tc"
 )
 
 func (ar *AppRouter) Login(c *gin.Context) {
@@ -18,7 +19,7 @@ func (ar *AppRouter) Login(c *gin.Context) {
 		return
 	}
 
-	//compare the user from the request, with the one we defined:
+	// compare the user from the request, with the one we defined:
 	uR, valid := ar.userRepo.ValidateUser(u.Username, u.Password)
 	if !valid {
 		c.JSON(http.StatusUnauthorized, gin.H{"ok": false, "error": "Invalid login/password"})
@@ -33,6 +34,8 @@ func (ar *AppRouter) Login(c *gin.Context) {
 
 	uR.Password = ""
 	uR.UserSign = ""
+	ar.setSecretCookie(c, TokenCookie, tData.AccessToken)
+	ar.setSecretCookie(c, RefreshCookie, tData.RefreshToken)
 	c.JSON(http.StatusOK, gin.H{"ok": true, "token": tData.AccessToken, "user": uR})
 }
 
@@ -66,15 +69,15 @@ func (ar *AppRouter) Refresh(c *gin.Context) {
 }
 
 func (ar *AppRouter) Logout(c *gin.Context) {
-	ar.setSecretCookie(c, tokenCookie, "")
-	ar.setSecretCookie(c, refreshCookie, "")
+	ar.setSecretCookie(c, TokenCookie, "")
+	ar.setSecretCookie(c, RefreshCookie, "")
 	c.JSON(http.StatusOK, gin.H{"ok": true})
 }
 
-func (ar *AppRouter) setSecretCookie(c *gin.Context, keyName string, keyValue string) {
+func (ar *AppRouter) setSecretCookie(c *gin.Context, keyName, keyValue string) {
 	liveTime := int(ar.config.JWTLive) * 60
 	path := "/api/data"
-	if keyName == refreshCookie {
+	if keyName == RefreshCookie {
 		liveTime = 60 * 86400
 		path = "/api/auth/refresh"
 	}

@@ -3,12 +3,13 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 	"my_fin/backend/pkg/data_provider"
 	"regexp"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -72,8 +73,8 @@ func (ur *UserRepository) ValidateToken(tokenString string) (userID interface{},
 	return
 }
 
-func (ur *UserRepository) ValidateUser(login string, password string) (u User, res bool) {
-	//check login is valid mail
+func (ur *UserRepository) ValidateUser(login, password string) (u User, res bool) {
+	// check login is valid mail
 	if !reEmail.MatchString(login) {
 		return
 	}
@@ -91,13 +92,13 @@ func (ur *UserRepository) ValidateUser(login string, password string) (u User, r
 /**
 return access_token, refresh_token
 */
-func (ur *UserRepository) CreateToken(userId uint64, userSign string) (*TokenData, error) {
+func (ur *UserRepository) CreateToken(userID uint64, userSign string) (*TokenData, error) {
 	tData := &TokenData{
 		ValidUntil: time.Now().Add(time.Minute * time.Duration(ur.jwtLiveTime)).Unix(),
 	}
 	atClaims := jwt.MapClaims{
-		//"authorized": true,
-		"user_id": userId,
+		// "authorized": true,
+		"user_id": userID,
 		"exp":     tData.ValidUntil,
 	}
 	at := jwt.NewWithClaims(jwt.SigningMethodHS512, atClaims)
@@ -106,7 +107,7 @@ func (ur *UserRepository) CreateToken(userId uint64, userSign string) (*TokenDat
 		return tData, err
 	}
 	tData.AccessToken = token
-	refresh, errR := ur.generateRefreshToken(userId, userSign)
+	refresh, errR := ur.generateRefreshToken(userID, userSign)
 	if errR != nil {
 		return tData, errR
 	}
@@ -114,35 +115,35 @@ func (ur *UserRepository) CreateToken(userId uint64, userSign string) (*TokenDat
 	return tData, nil
 }
 
-func (ur *UserRepository) generateRefreshToken(userId uint64, userSign string) (string, error) {
-	ur.removeExpiredTokens(userId)
+func (ur *UserRepository) generateRefreshToken(userID uint64, userSign string) (string, error) {
+	ur.removeExpiredTokens(userID)
 	nowTime := time.Now()
 	uid := uuid.New()
 	ur.db.InsertQuery("users_refresh_tokens", map[string]interface{}{
-		"user_id":       userId,
+		"user_id":       userID,
 		"refresh_token": uid,
 		"fingerprint":   userSign,
 		"created_at":    nowTime.Unix(),
-		"expires_at":    nowTime.Unix() + 60*86400, //valid in 60 days
+		"expires_at":    nowTime.Unix() + 60*86400, // valid in 60 days
 	})
 	return uid.String(), nil
 }
 
-func (ur *UserRepository) removeExpiredTokens(userId interface{}) {
+func (ur *UserRepository) removeExpiredTokens(userID interface{}) {
 	nowTime := time.Now()
-	_, _ = ur.db.Exec("DELETE FROM expires_at WHERE user_id = ? AND expires_at < ?", userId, nowTime.Unix())
+	_, _ = ur.db.Exec("DELETE FROM expires_at WHERE user_id = ? AND expires_at < ?", userID, nowTime.Unix())
 }
 
 func (ur *UserRepository) RegisterUser(rU *RegisterUser) (u User, exist bool, err error) {
 	if rU.Password != rU.RePassword {
 		return
 	}
-	//check login is valid mail
+	// check login is valid mail
 	if !reEmail.MatchString(rU.Email) {
 		return u, false, errors.New("42")
 	}
 
-	//check mail already exist
+	// check mail already exist
 	row := ur.db.SelectRow("SELECT user_id FROM users WHERE login = ?", rU.Email)
 	errU := row.Scan(&u.ID)
 	if errU != nil && errU != sql.ErrNoRows {
@@ -174,7 +175,7 @@ func (ur *UserRepository) RegisterUser(rU *RegisterUser) (u User, exist bool, er
 /**
 browser send fingerprint. validate pair token + fingerprint. If false - token is wrong or stolen
 */
-func (ur *UserRepository) ValidateRefreshToken(user interface{}, refreshToken string, fingerPrint string) bool {
+func (ur *UserRepository) ValidateRefreshToken(user interface{}, refreshToken, fingerPrint string) bool {
 	sqlR := "SELECT refresh_token, fingerprint, expires_at FROM users_refresh_tokens WHERE user_id = ?"
 	rows, errRf := ur.db.SelectQuery(sqlR, user)
 	if errRf != nil {
