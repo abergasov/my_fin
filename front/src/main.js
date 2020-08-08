@@ -21,14 +21,45 @@ if (window.requestIdleCallback) {
     requestIdleCallback(function () {
         Fingerprint2.get(function (components) {
             window.userId = hash(components);
+            runApp();
         })
     })
 } else {
     setTimeout(function () {
         Fingerprint2.get(function (components) {
             window.userId = hash(components);
+            runApp();
         })
     }, 500)
+}
+
+Vue.prototype.refreshManager = function () {
+    let expires = this.$store.state.auth_expires;
+    let auth = +this.$store.state.auth;
+    if (auth !== 1) {
+        return;
+    }
+    let nowTime = + new Date();
+    let diff = (expires * 1000) - nowTime;
+    diff = diff / 60000;
+    if (diff > 1) {
+        return;
+    }
+
+    axios.post(`/api/auth/refresh`, {user_id: this.$store.state.auth_user}, {
+        headers: {
+            m: window.userId,
+        }
+    })
+        .then(resp => {
+            if (resp.data.ok) {
+                this.$store.commit('setAuth', 1);
+            }
+        })
+        .catch(() => {
+            this.$store.commit('setAuth', 0);
+            this.$store.commit('setAlert', {display: true, text: 'Unauthorized', color: 'error'});
+        })
 }
 
 Vue.prototype.askBackend = function (url, param) {
@@ -50,22 +81,11 @@ Vue.prototype.askBackend = function (url, param) {
                 this.$store.commit('setLoading', false);
                 let code = +error.response.status;
                 let message = ''
-                if (code === 401) {
-                    axios.post(`/api/auth/refresh`, {user_id: this.$store.state.auth_user}, config)
-                        .then(resp => {
-                            if (resp.data.ok) {
-                                this.$store.commit('setAuth', 1);
-                                resolve(this.askBackend(url, param));
-                            }
-                            reject(error);
-                        })
-                        .catch(e => {
-                            this.$store.commit('setAuth', 0);
-                            this.$store.commit('setAlert', {display: true, text: 'Unauthorized', color: 'error'});
-                            reject(error);
-                        })
-                }
                 switch (code) {
+                    case 401:
+                        this.$store.commit('setAuth', 0);
+                        message = 'Unauthorized';
+                        break;
                     case 409:
                         message = 'Already exist';
                         break;
@@ -94,11 +114,17 @@ const router = new VueRouter({
 
 console.log(process.env.BACK_SERVER);
 
-new Vue({
-    vuetify,
-    i18n,
-    store,
-    el: '#app',
-    render: h => h(App),
-    router
-});
+function runApp () {
+    window.app = new Vue({
+        vuetify,
+        i18n,
+        store,
+        el: '#app',
+        render: h => h(App),
+        router
+    });
+    setInterval(() => {
+        // check every 10sec
+        window.app.refreshManager();
+    }, 10000);
+}

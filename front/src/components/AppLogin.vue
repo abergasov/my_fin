@@ -111,7 +111,7 @@
                             this.$store.commit('setAuthExpires', rawData.exp);
                             setTimeout(() => {
                                 this.$store.commit('setAuth', 1);
-                            });
+                            }, 100);
                         }
                     });
             }

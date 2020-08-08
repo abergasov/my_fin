@@ -13,7 +13,7 @@ import (
 )
 
 type User struct {
-	ID       uint64 `json:"id"`
+	ID       int64  `json:"id"`
 	Username string `json:"email"`
 	Password string `json:"password,omitempty"`
 	UserSign string `json:"user_sign,omitempty"`
@@ -92,9 +92,9 @@ func (ur *UserRepository) ValidateUser(login, password string) (u User, res bool
 /**
 return access_token, refresh_token
 */
-func (ur *UserRepository) CreateToken(userID uint64, userSign string) (*TokenData, error) {
+func (ur *UserRepository) CreateToken(userID int64, userSign string) (*TokenData, error) {
 	tData := &TokenData{
-		ValidUntil: time.Now().Add(time.Minute * time.Duration(ur.jwtLiveTime)).Unix(),
+		ValidUntil: ur.GetTokenValidUntil(),
 	}
 	atClaims := jwt.MapClaims{
 		// "authorized": true,
@@ -115,7 +115,7 @@ func (ur *UserRepository) CreateToken(userID uint64, userSign string) (*TokenDat
 	return tData, nil
 }
 
-func (ur *UserRepository) generateRefreshToken(userID uint64, userSign string) (string, error) {
+func (ur *UserRepository) generateRefreshToken(userID int64, userSign string) (string, error) {
 	ur.removeExpiredTokens(userID)
 	nowTime := time.Now()
 	uid := uuid.New()
@@ -157,7 +157,7 @@ func (ur *UserRepository) RegisterUser(rU *RegisterUser) (u User, exist bool, er
 		if errP != nil {
 			return u, false, errors.New("42")
 		}
-		u.ID = uint64(ur.db.InsertQuery("users", map[string]interface{}{"login": rU.Email, "password_hash": passwordHash}))
+		u.ID = ur.db.InsertQuery("users", map[string]interface{}{"login": rU.Email, "password_hash": passwordHash})
 
 		u.MandatoryPercent = 30
 		u.LivePercent = 20
@@ -208,4 +208,8 @@ func (ur *UserRepository) ValidateRefreshToken(user interface{}, refreshToken, f
 		}
 	}
 	return false
+}
+
+func (ur *UserRepository) GetTokenValidUntil() int64 {
+	return time.Now().Add(time.Minute * time.Duration(ur.jwtLiveTime)).Unix()
 }
