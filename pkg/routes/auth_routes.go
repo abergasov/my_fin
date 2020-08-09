@@ -94,6 +94,7 @@ func (ar *AppRouter) Refresh(c *gin.Context) {
 		}
 
 		ar.setSecretCookie(c, TokenCookie, tData.AccessToken)
+		c.JSON(http.StatusOK, gin.H{"ok": true, "token": tData.AccessToken})
 	}
 	return
 }

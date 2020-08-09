@@ -33,6 +33,16 @@ if (window.requestIdleCallback) {
     }, 500)
 }
 
+Vue.prototype.parseJwt = function (token) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
 Vue.prototype.refreshManager = function () {
     let expires = this.$store.state.auth_expires;
     let auth = +this.$store.state.auth;
@@ -53,6 +63,9 @@ Vue.prototype.refreshManager = function () {
     })
         .then(resp => {
             if (resp.data.ok) {
+                let rawData = this.parseJwt(resp.data.token);
+                this.$store.commit('setUserId', rawData.user_id);
+                this.$store.commit('setAuthExpires', rawData.exp);
                 this.$store.commit('setAuth', 1);
             }
         })
