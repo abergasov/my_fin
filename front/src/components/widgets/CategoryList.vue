@@ -112,6 +112,7 @@
                         }
                         this.$store.commit('setCategoriesExpenses', data.categories || []);
                         this.$store.commit('setCategoriesIncoming', data.categories_incoming || []);
+                        this.$store.commit('setRawStatisticConfig', {});
                         this.categories_copy = data.categories;
                         this.editMode = false;
                     })

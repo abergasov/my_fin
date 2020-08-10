@@ -32,6 +32,7 @@
   "graph_label_incoming": "остаток",
   "table_label_incoming": "доход",
   "last_30_days": "За последние 30 дней",
+  "raw_visualization": "Расходы относительно доходов",
   "add_income": "Добавить приход",
   "capital_change": "Изменения капитала",
   "capital_change_add": "Добавить",

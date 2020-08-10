@@ -19,9 +19,14 @@ const store = new Vuex.Store({
             text: '',
             color: '',
             delay: 0,
-        }
+        },
+        statistic_raw_config: JSON.parse(localStorage.getItem('statistic_raw_config')) || {},
     },
     mutations: {
+        setRawStatisticConfig(state, payload) {
+            state.statistic_raw_config = payload;
+            localStorage.setItem('statistic_raw_config', JSON.stringify(payload));
+        },
         setLoading(state, payload) {
             state.dataLoading = payload;
         },
@@ -63,6 +68,9 @@ const store = new Vuex.Store({
     getters: {
         authGetter: state => {
             return state.auth;
+        },
+        statisticRawConfig: state => {
+            return state.statistic_raw_config;
         }
     }
 })

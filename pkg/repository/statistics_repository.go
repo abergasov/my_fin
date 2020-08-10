@@ -17,6 +17,13 @@ func InitStatisticsRepository(db *database.DBAdapter) *StatisticsRepository {
 	return &StatisticsRepository{db: db}
 }
 
+type RawExpense struct {
+	CreatedAt int     `json:"created_at"`
+	Category  int     `json:"category"`
+	Amount    float64 `json:"amount"`
+	Type      string  `json:"type"`
+}
+
 func (sr *StatisticsRepository) RadarCount(userID uint64) (data [3]int, percent, percentMandatory int) {
 	sqlQ := "SELECT SUM(amount), type FROM expenses WHERE user_id = ? AND created_at BETWEEN ? AND ? GROUP BY type"
 	now := time.Now()
@@ -62,6 +69,28 @@ func (sr *StatisticsRepository) RadarCount(userID uint64) (data [3]int, percent,
 		percentMandatory = -percentMandatory
 	}
 	return [3]int{incomingSum, outgoingSum, outgoingSumMandatory}, percent, percentMandatory
+}
+
+func (sr *StatisticsRepository) RawData(userID uint64) (rawsRows []RawExpense) {
+	sqlR := "SELECT e.created_at, e.category, e.amount, e.type FROM expenses e WHERE e.user_id = ?"
+	rows, err := sr.db.SelectQuery(sqlR, userID)
+	if err != nil {
+		return
+	}
+
+	if rows != nil {
+		defer rows.Close()
+	}
+
+	for rows.Next() {
+		var row RawExpense
+		errS := rows.Scan(&row.CreatedAt, &row.Category, &row.Amount, &row.Type)
+		if errS != nil {
+			continue
+		}
+		rawsRows = append(rawsRows, row)
+	}
+	return
 }
 
 func (sr *StatisticsRepository) GroupedByCategory(userID uint64) interface{} {

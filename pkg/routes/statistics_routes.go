@@ -17,3 +17,8 @@ func (ar *AppRouter) Grouped(c *gin.Context) {
 	data := ar.statisticsRepo.GroupedByCategory(userID)
 	c.JSON(http.StatusOK, gin.H{"ok": true, "rows": data})
 }
+
+func (ar *AppRouter) MoneyChange(c *gin.Context) {
+	userID := ar.getUserIDFromRequest(c)
+	c.JSON(http.StatusOK, gin.H{"ok": true, "rows": ar.statisticsRepo.RawData(userID)})
+}

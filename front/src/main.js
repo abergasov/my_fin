@@ -136,6 +136,7 @@ function runApp () {
         render: h => h(App),
         router
     });
+    window.app.refreshManager();
     setInterval(() => {
         // check every 10sec
         window.app.refreshManager();
