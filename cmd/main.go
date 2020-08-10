@@ -64,6 +64,7 @@ func main() {
 
 	userData.POST("statistics/list", router.IEMonth)
 	userData.POST("statistics/group", router.Grouped)
+	userData.POST("statistics/money_change", router.MoneyChange)
 
 	logger.Info("Starting server at port 8080")
 
