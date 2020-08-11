@@ -18,10 +18,11 @@ func InitStatisticsRepository(db *database.DBAdapter) *StatisticsRepository {
 }
 
 type RawExpense struct {
-	CreatedAt int     `json:"created_at"`
-	Category  int     `json:"category"`
-	Amount    float64 `json:"amount"`
-	Type      string  `json:"type"`
+	CreatedAt  int     `json:"created_at"`
+	Commentary string  `json:"commentary"`
+	Category   int     `json:"category"`
+	Amount     float64 `json:"amount"`
+	Type       string  `json:"type"`
 }
 
 func (sr *StatisticsRepository) RadarCount(userID uint64) (data [3]int, percent, percentMandatory int) {
@@ -72,7 +73,7 @@ func (sr *StatisticsRepository) RadarCount(userID uint64) (data [3]int, percent,
 }
 
 func (sr *StatisticsRepository) RawData(userID uint64) (rawsRows []RawExpense) {
-	sqlR := "SELECT e.created_at, e.category, e.amount, e.type FROM expenses e WHERE e.user_id = ?"
+	sqlR := "SELECT created_at, category, amount, type, commentary FROM expenses WHERE user_id = ?"
 	rows, err := sr.db.SelectQuery(sqlR, userID)
 	if err != nil {
 		return
@@ -84,7 +85,7 @@ func (sr *StatisticsRepository) RawData(userID uint64) (rawsRows []RawExpense) {
 
 	for rows.Next() {
 		var row RawExpense
-		errS := rows.Scan(&row.CreatedAt, &row.Category, &row.Amount, &row.Type)
+		errS := rows.Scan(&row.CreatedAt, &row.Category, &row.Amount, &row.Type, &row.Commentary)
 		if errS != nil {
 			continue
 		}

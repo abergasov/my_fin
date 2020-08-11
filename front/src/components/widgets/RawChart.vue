@@ -2,6 +2,7 @@
   <v-row>
     <v-col cols="12" sm="12" md="8">
       <canvas id="ei_raw_data"></canvas>
+      <raw-expenses-table v-if="selected_rows.length > 0" :rows="selected_rows"></raw-expenses-table>
     </v-col>
     <v-col class="cat_list_wrapper" cols="12" sm="12" md="4">
       <div class="cat_list" v-for="cat in cats">
@@ -23,13 +24,18 @@
 </template>
 
 <script>
+import RawExpensesTable from "./RawExpensesTable";
 export default {
   name: "RawChart",
+  components: {RawExpensesTable},
   data() {
     return {
+      raw_rows: [],
       parsed_row: [],
       chart_config: {},
       table_data: [],
+      chart: null,
+      selected_rows: [],
     }
   },
   computed: {
@@ -133,7 +139,6 @@ export default {
       }
       for (let i of this.cats_inc) {
         let amountData = tmp[i.id] || [];
-        console.log(amountData);
         for (let month of monthList) {
           result[month] += amountData[month] || 0;
         }
@@ -177,7 +182,7 @@ export default {
 
       let dataSet = this.generateDataSet(rows)
       let ctx = document.getElementById('ei_raw_data').getContext('2d');
-      new Chart(ctx, {
+      this.chart = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: dataSet.month,
@@ -191,7 +196,8 @@ export default {
           title: {
             display: true,
             text: this.$t('raw_visualization')
-          }
+          },
+          onClick: this.loadCategoryData,
         },
         scales: {
           xAxes: [{
@@ -204,12 +210,50 @@ export default {
       });
     },
 
+    loadCategoryData(e, i) {
+      if (!this.chart) {
+        return;
+      }
+      let activeElement = this.chart.getElementAtEvent(e);
+      let selectedLabel = activeElement[0]._view.datasetLabel;
+      for (let i of this.cats) {
+        if (i.title === selectedLabel) {
+          // it is root category
+          let ids = {};
+          ids[i.id] = i.title;
+          for (let j of i.sub) {
+            ids[j.id] = j.title;
+          }
+          let rows = [];
+          let catIds = Object.keys(ids);
+          for (let j = 0; j < this.raw_rows.length; j++) {
+            if (!catIds.includes(this.raw_rows[j].category.toString())) {
+              continue;
+            }
+            let tmp = this.raw_rows[j];
+            tmp.amount_expense = '-' + tmp.amount;
+            tmp.amount_incoming = '';
+            tmp.cat_name = ids[tmp.category];
+            tmp.created_at = this.$moment(+tmp.created_at * 1000).format('YYYY-MM-DD HH:mm');
+            rows.push(tmp);
+          }
+          this.selected_rows = rows;
+        }
+        for (let j of i.sub) {
+          if (j.title === selectedLabel) {
+            // it is child category
+          }
+        }
+      }
+    },
+
     loadData() {
       this.askBackend('data/statistics/money_change', {}).then(
           resp => {
             if (!resp.ok) {
               return
             }
+            this.raw_rows = resp.rows;
             this.initChart(resp.rows);
           }
       )
