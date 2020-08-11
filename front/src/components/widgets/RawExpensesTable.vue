@@ -19,7 +19,7 @@
                     :sort-by="['calories', 'fat']"
                     :sort-desc="[false, true]"
                     multi-sort
-                    :items-per-page="-1"
+                    :items-per-page="(rows.length > 30 ? 30 : -1)"
                     class="elevation-1">
         <template slot="body.append">
           <tr class="pink--text">
