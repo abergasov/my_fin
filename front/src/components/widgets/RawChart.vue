@@ -216,6 +216,12 @@ export default {
       }
       let activeElement = this.chart.getElementAtEvent(e);
       let selectedLabel = activeElement[0]._view.datasetLabel;
+      let selectedMonth = activeElement[0]._view.label;
+
+      let dateSort = this.$moment(`${selectedMonth}-01`);
+      let startTimestamp = dateSort.unix();
+      let endTimestamp = dateSort.endOf('month').unix();
+
       for (let i of this.cats) {
         if (i.title === selectedLabel) {
           // it is root category
@@ -228,6 +234,10 @@ export default {
           let catIds = Object.keys(ids);
           for (let j = 0; j < this.raw_rows.length; j++) {
             if (!catIds.includes(this.raw_rows[j].category.toString())) {
+              continue;
+            }
+            let validDate = this.raw_rows[j].created_at >= startTimestamp && this.raw_rows[j].created_at <= endTimestamp
+            if (!validDate) {
               continue;
             }
             let tmp = this.raw_rows[j];
