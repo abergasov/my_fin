@@ -20,5 +20,6 @@ func (ar *AppRouter) Grouped(c *gin.Context) {
 
 func (ar *AppRouter) MoneyChange(c *gin.Context) {
 	userID := ar.getUserIDFromRequest(c)
-	c.JSON(http.StatusOK, gin.H{"ok": true, "rows": ar.statisticsRepo.RawData(userID)})
+	rows, limit := ar.statisticsRepo.RawData(userID)
+	c.JSON(http.StatusOK, gin.H{"ok": true, "rows": rows, "limit": limit})
 }

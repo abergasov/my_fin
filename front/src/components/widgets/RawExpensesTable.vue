@@ -44,7 +44,7 @@ export default {
       headers: [
         { text: 'Category', value: 'cat_name' },
         { text: 'Expense', value: 'amount_expense' },
-        { text: 'Created at', value: 'created_at' },
+        { text: 'Created at', value: 'created_att' },
         { text: 'Commentary', value: 'commentary' },
       ],
       total_ex_sum: '',

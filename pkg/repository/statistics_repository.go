@@ -72,7 +72,7 @@ func (sr *StatisticsRepository) RadarCount(userID uint64) (data [3]int, percent,
 	return [3]int{incomingSum, outgoingSum, outgoingSumMandatory}, percent, percentMandatory
 }
 
-func (sr *StatisticsRepository) RawData(userID uint64) (rawsRows []RawExpense) {
+func (sr *StatisticsRepository) RawData(userID uint64) (rawsRows []RawExpense, userLimits int) {
 	sqlR := "SELECT created_at, category, amount, type, commentary FROM expenses WHERE user_id = ?"
 	rows, err := sr.db.SelectQuery(sqlR, userID)
 	if err != nil {
@@ -91,9 +91,19 @@ func (sr *StatisticsRepository) RawData(userID uint64) (rawsRows []RawExpense) {
 		}
 		rawsRows = append(rawsRows, row)
 	}
+	userLimits = sr.getUserLimits(userID)
 	return
 }
 
+func (sr *StatisticsRepository) getUserLimits(userID uint64) int {
+	row := sr.db.SelectRow("SELECT mandatory_percent FROM users WHERE user_id = ?", userID)
+	var MandatoryPercent int
+	errU := row.Scan(&MandatoryPercent)
+	if errU == nil {
+		return MandatoryPercent
+	}
+	return 0
+}
 func (sr *StatisticsRepository) GroupedByCategory(userID uint64) interface{} {
 	return ""
 }

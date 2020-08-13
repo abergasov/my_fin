@@ -19,7 +19,8 @@ window.chartColors = {
     color_12: "#00695C",
     color_13: "#2E7D32",
     color_14: "#EF6C00",
-    incoming_color: 'rgba(76, 175, 80, 0.1)'
+    incoming_color: 'rgba(76, 175, 80, 0.1)',
+    limit_color: 'rgba(255, 0, 0, 0.9)',
 };
 
 const opts = {

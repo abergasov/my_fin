@@ -96,7 +96,7 @@ export default {
       console.log('Set selected all', this.chart_config, this.cats);
     },
 
-    generateDataSet(rows) {
+    generateDataSet(rows, limit) {
       let tmp = {};
       let monthList = [];
       // prepare draft of amount
@@ -123,6 +123,7 @@ export default {
           let obj = {
             label: i.title,
             //type: 'line',
+            order: 3,
             stack: 'line 1',
             backgroundColor: window.chartColors[`color_${color}`],
             data: this.countRootWithSubCats(i, tmp, monthList),
@@ -144,16 +145,29 @@ export default {
         }
       }
       let resp = [];
+      let limitResp = [];
       for (let i of Object.keys(result)) {
         resp.push(result[i]);
+        limitResp.push((result[i]/100) * +limit);
       }
 
       dataSet.push({
         label: 'Доходы',
         type: 'line',
+        order: 2,
         stack: 'line 2',
         backgroundColor: window.chartColors.incoming_color,
         data: resp,
+      });
+
+      dataSet.push({
+        label: 'Лимит расходов',
+        order: 1,
+        type: 'line',
+        stack: 'line 3',
+        //backgroundColor: window.chartColors.limit_color,
+        borderColor: window.chartColors.limit_color,
+        data: limitResp,
       });
 
       return {data: dataSet, month: monthList};
@@ -178,9 +192,9 @@ export default {
       return resp;
     },
 
-    initChart(rows) {
+    initChart(rows, limit) {
 
-      let dataSet = this.generateDataSet(rows)
+      let dataSet = this.generateDataSet(rows, limit)
       let ctx = document.getElementById('ei_raw_data').getContext('2d');
       this.chart = new Chart(ctx, {
         type: 'bar',
@@ -210,7 +224,7 @@ export default {
       });
     },
 
-    loadCategoryData(e, i) {
+    loadCategoryData(e) {
       if (!this.chart) {
         return;
       }
@@ -223,7 +237,7 @@ export default {
       let endTimestamp = dateSort.endOf('month').unix();
 
       for (let i of this.cats) {
-        if (i.title === selectedLabel) {
+        if (i.title.trim() === selectedLabel) {
           // it is root category
           let ids = {};
           ids[i.id] = i.title;
@@ -244,7 +258,7 @@ export default {
             tmp.amount_expense = '-' + tmp.amount;
             tmp.amount_incoming = '';
             tmp.cat_name = ids[tmp.category];
-            tmp.created_at = this.$moment(+tmp.created_at * 1000).format('YYYY-MM-DD HH:mm');
+            tmp.created_att = this.$moment(+tmp.created_at * 1000).format('YYYY-MM-DD HH:mm');
             rows.push(tmp);
           }
           this.selected_rows = rows;
@@ -264,7 +278,7 @@ export default {
               return
             }
             this.raw_rows = resp.rows;
-            this.initChart(resp.rows);
+            this.initChart(resp.rows, resp.limit);
           }
       )
     }
