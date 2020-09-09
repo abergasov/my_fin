@@ -32,6 +32,7 @@
   "graph_label_incoming": "balance",
   "table_label_incoming": "incoming",
   "last_30_days": "Last 30 days",
+  "last_14_days": "Last 14 days",
   "raw_visualization": "Expenses and incoming",
   "add_income": "Add income",
   "capital_change": "Capital change",

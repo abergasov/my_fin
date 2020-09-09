@@ -26,8 +26,8 @@ type RawExpense struct {
 }
 
 type PerDayExpense struct {
-	Day    string `json:"day"`
-	Amount int    `json:"amount"`
+	Day    string `json:"x"`
+	Amount int    `json:"y"`
 }
 
 func (sr *StatisticsRepository) RadarCount(userID uint64) (data [3]int, percent, percentMandatory int) {

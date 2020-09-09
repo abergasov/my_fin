@@ -21,6 +21,7 @@ const store = new Vuex.Store({
             delay: 0,
         },
         el_chart: {},
+        per_days_chart: {},
         statistic_raw_config: JSON.parse(localStorage.getItem('statistic_raw_config')) || {},
     },
     mutations: {
@@ -50,6 +51,9 @@ const store = new Vuex.Store({
         },
         setElChart (state, payload) {
             state.el_chart = payload;
+        },
+        setPerDays (state, payload) {
+            state.per_days_chart = payload;
         },
         setCategoriesExpenses (state, payload) {
             state.categories_expenses = payload;

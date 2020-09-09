@@ -16,6 +16,9 @@
         <DebtList></DebtList>
       </v-col>
     </v-row>
+    <v-row no-gutters>
+      <ExpByDays></ExpByDays>
+    </v-row>
     <ExpensesTable></ExpensesTable>
   </v-container>
 </template>
@@ -24,9 +27,10 @@
   import ExpensesTable from "./widgets/ExpensesTable";
   import MoneyChange from "./widgets/MoneyChange";
   import EIRadar from "./widgets/EIRadar";
+  import ExpByDays from "./widgets/ExpByDays";
   import DebtList from "./widgets/DebtList";
   export default {
-    components: {DebtList, ExpensesTable, MoneyChange, EIRadar},
+    components: {DebtList, ExpensesTable, MoneyChange, EIRadar, ExpByDays},
     name: 'AppHome',
     data () {
       return {
@@ -50,6 +54,7 @@
               if (data.ok) {
                 this.$store.commit('setExpenses', data.expenses || []);
                 this.$store.commit('setElChart', data.ei_radar || {});
+                this.$store.commit('setPerDays', data.per_day || []);
                 window.dispatchEvent(new Event('main_page_load'));
               }
             })
