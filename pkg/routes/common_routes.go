@@ -21,10 +21,10 @@ func (ar *AppRouter) BulkHomePage(c *gin.Context) {
 		PercentOptional: percentOptional,
 	}
 
-	expenses := ar.expenseRepo.GetExpense(userID)
 	c.JSON(http.StatusOK, gin.H{
 		"ok":       true,
 		"ei_radar": radarData,
-		"expenses": expenses,
+		"expenses": ar.expenseRepo.GetExpense(userID),
+		"per_day":  ar.statisticsRepo.PerDayExp(userID),
 	})
 }

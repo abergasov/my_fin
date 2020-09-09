@@ -25,6 +25,11 @@ type RawExpense struct {
 	Type       string  `json:"type"`
 }
 
+type PerDayExpense struct {
+	Day    string `json:"day"`
+	Amount int    `json:"amount"`
+}
+
 func (sr *StatisticsRepository) RadarCount(userID uint64) (data [3]int, percent, percentMandatory int) {
 	sqlQ := "SELECT SUM(amount), type FROM expenses WHERE user_id = ? AND created_at BETWEEN ? AND ? GROUP BY type"
 	now := time.Now()
@@ -70,6 +75,27 @@ func (sr *StatisticsRepository) RadarCount(userID uint64) (data [3]int, percent,
 		percentMandatory = -percentMandatory
 	}
 	return [3]int{incomingSum, outgoingSum, outgoingSumMandatory}, percent, percentMandatory
+}
+
+func (sr *StatisticsRepository) PerDayExp(userID uint64) (data []PerDayExpense) {
+	sqlPDE := "SELECT SUM(e.amount) as sum_amount, from_unixtime(e.created_at,'%Y-%m-%d') as date_created FROM expenses e WHERE user_id = ? AND type != 'I' GROUP BY date_created ORDER BY date_created DESC LIMIT 14"
+	rows, err := sr.db.SelectQuery(sqlPDE, userID)
+	if err != nil {
+		return
+	}
+	if rows != nil {
+		defer rows.Close()
+	}
+
+	for rows.Next() {
+		var row PerDayExpense
+		errS := rows.Scan(&row.Amount, &row.Day)
+		if errS != nil {
+			continue
+		}
+		data = append(data, row)
+	}
+	return
 }
 
 func (sr *StatisticsRepository) RawData(userID uint64) (rawsRows []RawExpense, userLimits int) {
