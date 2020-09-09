@@ -6,11 +6,12 @@
     export default {
         name: "EIRadar",
         created() {
-           // setTimeout(() => {
-                this.loadData();
-           // }, 1000);
+            window.addEventListener("main_page_load", this.loadData);
         },
-        methods: {
+        beforeDestroy() {
+          window.removeEventListener("main_page_load", this.loadData);
+        },
+      methods: {
             initChart(data, percent, percent_optional) {
               let ctx = document.getElementById('ei_radar').getContext('2d');
               new Chart(ctx, {
@@ -50,14 +51,9 @@
           },
 
             loadData() {
-                this.askBackend('data/statistics/list', {}).then(
-                    resp => {
-                        if (!resp.ok) {
-                            return
-                        }
-                        this.initChart(resp.rows, resp.percent, resp.percent_optional);
-                    }
-                )
+                console.log('event listener')
+                let resp = this.$store.state.el_chart;
+                this.initChart(resp.rows, resp.percent, resp.percent_optional);
             }
         }
     }

@@ -153,7 +153,6 @@
     methods: {
       initApp() {
         this.getUserCategories();
-        this.getExpenses();
       },
       logout() {
         this.askBackend('auth/logout', {}).then(() => {
@@ -178,15 +177,6 @@
         this.$vuetify.lang.current = this.currentLang.code;
         localStorage.lang = code;
         //this.$changeLanguage(code)
-      },
-
-      getExpenses() {
-        this.askBackend('data/expense/list', {})
-          .then(data => {
-            if (data.ok) {
-              this.$store.commit('setExpenses', data.rows || []);
-            }
-          })
       },
 
       getUserCategories() {

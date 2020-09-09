@@ -39,8 +39,21 @@
         commentary: '',
       }
     },
+    created() {
+      this.loadAll();
+    },
     methods: {
 
+      loadAll() {
+        this.askBackend('data/bulk/main', {})
+            .then(data => {
+              if (data.ok) {
+                this.$store.commit('setExpenses', data.expenses || []);
+                this.$store.commit('setElChart', data.ei_radar || {});
+                window.dispatchEvent(new Event('main_page_load'));
+              }
+            })
+      },
     }
   };
 </script>

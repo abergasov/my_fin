@@ -66,6 +66,8 @@ func main() {
 	userData.POST("statistics/group", router.Grouped)
 	userData.POST("statistics/money_change", router.MoneyChange)
 
+	userData.POST("bulk/main", router.BulkHomePage)
+
 	logger.Info("Starting server at port 8080")
 
 	errR := router.GinEngine.Run(":8080")

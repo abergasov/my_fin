@@ -20,6 +20,7 @@ const store = new Vuex.Store({
             color: '',
             delay: 0,
         },
+        el_chart: {},
         statistic_raw_config: JSON.parse(localStorage.getItem('statistic_raw_config')) || {},
     },
     mutations: {
@@ -46,6 +47,9 @@ const store = new Vuex.Store({
         },
         setExpenses (state, payload) {
             state.expenses = payload;
+        },
+        setElChart (state, payload) {
+            state.el_chart = payload;
         },
         setCategoriesExpenses (state, payload) {
             state.categories_expenses = payload;
