@@ -1,11 +1,11 @@
 <template>
   <v-row no-gutters>
-    <v-col v-if="!isSmallScreen"  sm="12" md="8">
+    <v-col cols="12" sm="12" md="8">
       <div class="chart_wrapper">
         <canvas id="exp_by_day"></canvas>
       </div>
     </v-col>
-    <v-col  sm="12" md="4">
+    <v-col cols="12" sm="12" md="4">
       awdawd
     </v-col>
   </v-row>
@@ -18,9 +18,6 @@
       return {
         isSmallScreen: false
       }
-    },
-    beforeMount() {
-      this.isSmallScreen = this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm
     },
     created() {
       window.addEventListener("main_page_load", this.loadData);
@@ -77,9 +74,7 @@
       loadData() {
         console.log('event listener exp by days')
         let resp = this.$store.state.per_days_chart;
-        if (!this.isSmallScreen) {
-          this.initChart(resp);
-        }
+        this.initChart(resp);
       }
     }
   }
