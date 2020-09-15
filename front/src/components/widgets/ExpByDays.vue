@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-col fluid cols="12" sm="12" md="8">
+    <v-col fluid cols="12" sm="12" md="12">
       <div class="chart_wrapper">
         <canvas id="exp_by_day"></canvas>
       </div>
@@ -75,10 +75,16 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="css">
   .chart_wrapper {
     height: 300px;
     min-width: 900px;
     width: 100%;
   }
+  @media (max-width: 767px) {
+    .chart_wrapper {
+      min-width: 700px;
+    }
+  }
+
 </style>
