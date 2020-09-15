@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-col fluid cols="12" sm="12" md="12">
+    <v-col v-if="!isSmallScreen" cols="12" sm="12" md="12">
       <div class="chart_wrapper">
         <canvas id="exp_by_day"></canvas>
       </div>
@@ -14,6 +14,14 @@
 <script>
   export default {
     name: "ExpByDays",
+    data () {
+      return {
+        isSmallScreen: false
+      }
+    },
+    beforeMount() {
+      this.isSmallScreen = this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm
+    },
     created() {
       window.addEventListener("main_page_load", this.loadData);
     },
@@ -69,7 +77,9 @@
       loadData() {
         console.log('event listener exp by days')
         let resp = this.$store.state.per_days_chart;
-        this.initChart(resp);
+        if (!this.isSmallScreen) {
+          this.initChart(resp);
+        }
       }
     }
   }
@@ -84,6 +94,11 @@
   @media (max-width: 767px) {
     .chart_wrapper {
       min-width: 700px;
+    }
+  }
+  @media (max-width: 300px) {
+    .chart_wrapper {
+      min-width: 300px;
     }
   }
 
