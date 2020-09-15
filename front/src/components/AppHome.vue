@@ -16,9 +16,7 @@
         <DebtList></DebtList>
       </v-col>
     </v-row>
-    <v-row no-gutters>
-      <ExpByDays></ExpByDays>
-    </v-row>
+    <ExpByDays></ExpByDays>
     <ExpensesTable></ExpensesTable>
   </v-container>
 </template>

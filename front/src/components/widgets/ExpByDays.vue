@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <v-col v-if="!isSmallScreen" cols="12" sm="12" md="12">
+  <v-row no-gutters>
+    <v-col v-if="!isSmallScreen"  sm="12" md="8">
       <div class="chart_wrapper">
         <canvas id="exp_by_day"></canvas>
       </div>
     </v-col>
-    <v-col cols="12" sm="12" md="4">
+    <v-col  sm="12" md="4">
       awdawd
     </v-col>
-  </div>
+  </v-row>
 </template>
 
 <script>
@@ -88,18 +88,5 @@
 <style scoped lang="css">
   .chart_wrapper {
     height: 300px;
-    min-width: 900px;
-    width: 100%;
   }
-  @media (max-width: 767px) {
-    .chart_wrapper {
-      min-width: 700px;
-    }
-  }
-  @media (max-width: 300px) {
-    .chart_wrapper {
-      min-width: 300px;
-    }
-  }
-
 </style>
