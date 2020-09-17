@@ -13,6 +13,10 @@
             <td>{{ item.x }}</td>
             <td>{{ item.y }}</td>
           </tr>
+          <tr>
+            <td>{{ $t('total') }}</td>
+            <td>{{ total }}</td>
+          </tr>
           </tbody>
         </template>
       </v-simple-table>
@@ -27,6 +31,7 @@
       return {
         isSmallScreen: false,
         dataDays: [],
+        total: 0,
       }
     },
     created() {
@@ -77,6 +82,7 @@
       loadData() {
         console.log('event listener exp by days')
         this.dataDays = this.$store.state.per_days_chart;
+        this.total = this.dataDays.map(i => i.y).reduce((prev, next) => prev + next);
         this.initChart(this.dataDays);
       }
     }
