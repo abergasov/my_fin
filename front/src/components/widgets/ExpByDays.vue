@@ -5,8 +5,17 @@
         <canvas id="exp_by_day"></canvas>
       </div>
     </v-col>
-    <v-col cols="12" sm="12" md="4">
-      awdawd
+    <v-col class="dd_table" cols="12" sm="12" md="4">
+      <v-simple-table>
+        <template v-slot:default>
+          <tbody>
+          <tr v-for="item in dataDays" :key="item.x">
+            <td>{{ item.x }}</td>
+            <td>{{ item.y }}</td>
+          </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
     </v-col>
   </v-row>
 </template>
@@ -16,7 +25,8 @@
     name: "ExpByDays",
     data () {
       return {
-        isSmallScreen: false
+        isSmallScreen: false,
+        dataDays: [],
       }
     },
     created() {
@@ -27,13 +37,6 @@
     },
     methods: {
       initChart(data) {
-        // data = JSON.stringify(data);
-        // data = JSON.parse(data);
-        console.log(data);
-        console.log(data);
-        console.log(data);
-        console.log(data);
-        console.log(data);
         new Chart(document.getElementById('exp_by_day').getContext('2d'), {
           type: 'bar',
           data: {
@@ -73,15 +76,24 @@
 
       loadData() {
         console.log('event listener exp by days')
-        let resp = this.$store.state.per_days_chart;
-        this.initChart(resp);
+        this.dataDays = this.$store.state.per_days_chart;
+        this.initChart(this.dataDays);
       }
     }
   }
 </script>
 
-<style scoped lang="css">
+<style scoped lang="scss">
   .chart_wrapper {
     height: 300px;
+  }
+  .dd_table {
+    .v-data-table {
+      table {
+        td {
+          height: 20px;
+        }
+      }
+    }
   }
 </style>
