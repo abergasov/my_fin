@@ -91,7 +91,7 @@
 
 <style scoped lang="scss">
   .chart_wrapper {
-    height: 300px;
+    height: 330px;
   }
   .dd_table {
     .v-data-table {
