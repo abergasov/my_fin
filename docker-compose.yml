@@ -16,7 +16,7 @@ services:
       - dbMysql
     networks:
       - app-network
-    command: ["/app/wait-for-it.sh", "database:3303", "--", "/app/my_fin"]
+    command: ["/app/wait-for-it.sh", "dbMysql:3309", "--", "/app/my_fin"]
 
   dbMysql:
     image: mariadb
