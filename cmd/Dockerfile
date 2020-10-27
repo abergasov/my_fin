@@ -8,7 +8,7 @@ FROM debian:buster-slim
 WORKDIR /app
 COPY --from=build /go/src/my_fin/bin/* /app/
 COPY --from=build /go/src/my_fin/configs/* /app/configs/
-COPY --from=build /go/src/my_fin/scripts/* /app/configs/
+COPY --from=build /go/src/my_fin/scripts/wait-for-it.sh /app/wait-for-it.sh
 RUN chmod +x /app/*
 EXPOSE 29010/tcp
 CMD /app/archivarius
