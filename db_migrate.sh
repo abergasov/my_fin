@@ -12,3 +12,9 @@ else
     echo "migrated failed"
     exit 1
 fi
+
+cd ..
+
+cd front || exit
+npm ci
+npm run build
