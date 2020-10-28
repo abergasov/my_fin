@@ -23,3 +23,5 @@ configs/common.env
 /bin
 !/bin/.gitkeep
 configs/app_conf.yml
+data/*
+!data/.gitkeep
