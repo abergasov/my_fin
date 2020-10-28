@@ -9,6 +9,9 @@ clean() {
 
 clean
 
+git fetch --all
+git reset --hard origin/master
+
 echo "run prod config"
 echo "RUN docker-compose.yml "
 docker-compose -f docker-compose.yml pull
