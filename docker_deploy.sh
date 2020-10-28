@@ -5,6 +5,8 @@ clean() {
   docker container stop app_main.mf webserver.mf dbMysql.mf
   echo "drop containers"
   docker rm -v app_main.mf webserver.mf dbMysql.mf
+  echo "drop old images"
+  docker rmi $(docker images -f dangling=true -q)
 }
 
 clean
