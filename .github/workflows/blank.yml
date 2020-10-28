@@ -15,7 +15,7 @@ jobs:
           username: ${{ secrets.SERVER_ADMIN }}
           key: ${{ secrets.SERVER_KEY }}
           port: ${{ secrets.SERVER_PORT }}
-          script: cd ${{ secrets.SERVER_PATH }} && bash docker_deploy.sh
+          script: cd ${{ secrets.SERVER_PATH }} && bash db_migrate.sh && bash docker_deploy.sh
       - name: Telegram failed notify
         uses: appleboy/telegram-action@master
         if: ${{ failure() }}
