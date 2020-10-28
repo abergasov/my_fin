@@ -41,6 +41,7 @@ services:
       - "app"
     volumes:
       - ./configs/nginx:/etc/nginx/conf.d
+      - ./front/dist:/etc/nginx/html
     ports:
       - 80:80
       - 443:443
