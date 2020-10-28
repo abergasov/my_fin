@@ -1,4 +1,4 @@
-FROM golang:1.14 AS build
+FROM golang:1.15 AS build
 COPY . /go/src/my_fin
 WORKDIR /go/src/my_fin
 RUN make build
