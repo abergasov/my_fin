@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"my_fin/backend/pkg/database"
+	"my_fin/backend/pkg/logger"
 	"regexp"
 	"time"
 
@@ -60,6 +61,7 @@ func (ur *UserRepository) ValidateToken(tokenString string) (userID interface{},
 	})
 
 	if err != nil {
+		logger.Error("error parse token", err)
 		return
 	}
 
@@ -69,6 +71,8 @@ func (ur *UserRepository) ValidateToken(tokenString string) (userID interface{},
 				return v, true
 			}
 		}
+	} else {
+		logger.Warning("Invalid token")
 	}
 	return
 }
