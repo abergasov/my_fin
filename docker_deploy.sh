@@ -2,9 +2,9 @@
 
 clean() {
   echo "stop containers";
-  docker container stop app_main.mf webserver.mf dbMysql.mf
+  docker container stop app_main.mf dbMysql.mf
   echo "drop containers"
-  docker rm -v app_main.mf webserver.mf dbMysql.mf
+  docker rm -v app_main.mf dbMysql.mf
   echo "drop old images"
   docker rmi $(docker images -f dangling=true -q)
 }
