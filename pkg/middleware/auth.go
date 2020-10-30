@@ -21,7 +21,7 @@ func AuthMiddleware(userRepo *repository.UserRepository) gin.HandlerFunc {
 
 		uID, valid := userRepo.ValidateToken(token)
 		if !valid {
-			logger.Warning("auth error", "invalid token")
+			logger.Warning("auth error", "invalid token", token)
 			c.JSON(http.StatusUnauthorized, gin.H{"ok": false, "error": "Invalid login/password"})
 			c.Abort()
 			return
