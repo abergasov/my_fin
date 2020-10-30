@@ -14,4 +14,4 @@ clean
 echo "run prod config"
 echo "RUN docker-compose.yml "
 docker-compose -f docker-compose.yml pull
-docker-compose -f docker-compose.yml up --build
+docker-compose -f docker-compose.yml up -d --build
