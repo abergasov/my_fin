@@ -12,6 +12,8 @@ services:
       context: .
       dockerfile: cmd/Dockerfile
     restart: always
+    ports:
+      - 8080:8080
     depends_on:
       - dbMysql
     networks:
@@ -31,36 +33,6 @@ services:
       - data_volume:/var/lib/mysql/
     networks:
       - app-network
-
-  nginx:
-    image: nginx:alpine
-    container_name: webserver.mf
-    restart: always
-    tty: true
-    depends_on:
-      - "app"
-    volumes:
-      - ./configs/nginx:/etc/nginx/conf.d
-      - ./front/dist:/etc/nginx/html
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    ports:
-      - 80:80
-      - 443:443
-    networks:
-      - app-network
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-
-  certbot:
-    container_name: certbot
-    image: certbot/certbot
-    networks:
-      - app-network
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    restart: unless-stopped
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 #Docker Networks
 networks:
