@@ -42,6 +42,7 @@ func main() {
 	router.GinEngine.GET("/api/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"ok":         true,
+			"test":       true,
 			"build_time": buildTime,
 			"build_hash": buildHash,
 		})
