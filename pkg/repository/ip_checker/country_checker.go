@@ -78,6 +78,7 @@ func (p *PositionChecker) getData(ip string) (ipResponse, error) {
 	}
 	defer res.Body.Close()
 	if res.StatusCode != 200 {
+		println("invalid code", res.StatusCode)
 		return resp, errors.New("invalid code")
 	}
 
