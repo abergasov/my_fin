@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"my_fin/backend/pkg/config"
 	"my_fin/backend/pkg/repository"
+	"my_fin/backend/pkg/repository/ip_checker"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -17,6 +18,7 @@ type AppRouter struct {
 	userRepo       *repository.UserRepository
 	statisticsRepo *repository.StatisticsRepository
 	assetsRepo     *repository.AssetsRepository
+	country        *ip_checker.PositionChecker
 }
 
 type RouterRepoConfig struct {
@@ -25,6 +27,7 @@ type RouterRepoConfig struct {
 	UserRepository       *repository.UserRepository
 	StatisticsRepository *repository.StatisticsRepository
 	AssetsRepository     *repository.AssetsRepository
+	CountryChecker       *ip_checker.PositionChecker
 }
 
 func InitRouter(cnf *config.AppConfig, rrC *RouterRepoConfig) *AppRouter {
@@ -39,6 +42,7 @@ func InitRouter(cnf *config.AppConfig, rrC *RouterRepoConfig) *AppRouter {
 		userRepo:       rrC.UserRepository,
 		statisticsRepo: rrC.StatisticsRepository,
 		assetsRepo:     rrC.AssetsRepository,
+		country:        rrC.CountryChecker,
 	}
 }
 
@@ -49,4 +53,8 @@ func (ar *AppRouter) getUserIDFromRequest(c *gin.Context) uint64 {
 		return 0
 	}
 	return uint64(uID)
+}
+
+func (ar *AppRouter) GetUserCountry(c *gin.Context) {
+	ar.country.GetMe(c.GetHeader("X-Real-Ip"))
 }

@@ -6,6 +6,7 @@ import (
 	"my_fin/backend/pkg/logger"
 	"my_fin/backend/pkg/middleware"
 	"my_fin/backend/pkg/repository"
+	"my_fin/backend/pkg/repository/ip_checker"
 	"my_fin/backend/pkg/routes"
 	"net/http"
 
@@ -31,6 +32,7 @@ func main() {
 		UserRepository:       repository.InitUserRepository(dbConnection, appConf.JWTKey, appConf.JWTLive),
 		StatisticsRepository: repository.InitStatisticsRepository(dbConnection),
 		AssetsRepository:     repository.InitAssetsRepository(dbConnection),
+		CountryChecker:       ip_checker.NewPosition(),
 	}
 
 	logger.Info("Config ok")
@@ -39,6 +41,7 @@ func main() {
 	router := routes.InitRouter(appConf, &routerConf)
 	logger.Info("Router ok")
 
+	router.GinEngine.GET("/api/me", router.GetUserCountry)
 	router.GinEngine.GET("/api/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"ok":         true,
