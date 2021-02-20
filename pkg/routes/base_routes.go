@@ -5,6 +5,7 @@ import (
 	"my_fin/backend/pkg/config"
 	"my_fin/backend/pkg/repository"
 	"my_fin/backend/pkg/repository/ip_checker"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -56,5 +57,10 @@ func (ar *AppRouter) getUserIDFromRequest(c *gin.Context) uint64 {
 }
 
 func (ar *AppRouter) GetUserCountry(c *gin.Context) {
-	ar.country.GetMe(c.GetHeader("X-Real-Ip"))
+	country, city := ar.country.GetMe(c.GetHeader("X-Real-Ip"))
+	c.JSON(http.StatusOK, gin.H{
+		"ok":      true,
+		"city":    city,
+		"country": country,
+	})
 }
