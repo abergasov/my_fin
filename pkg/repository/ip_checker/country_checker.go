@@ -66,12 +66,17 @@ func (p *PositionChecker) GetMe(ip string) (country, city string) {
 }
 
 func (p *PositionChecker) getData(ip string) (ipResponse, error) {
+	var resp ipResponse
+	println("https://ipapi.co/" + ip + "/json/")
 	req, _ := http.NewRequest("GET", "https://ipapi.co/"+ip+"/json/", nil)
 
-	res, _ := http.DefaultClient.Do(req)
+	res, err := http.DefaultClient.Do(req)
 
+	if err != nil {
+		println("err ask ip", err.Error())
+		return ipResponse{}, err
+	}
 	defer res.Body.Close()
-	var resp ipResponse
 	if res.StatusCode != 200 {
 		return resp, errors.New("invalid code")
 	}
