@@ -8,3 +8,4 @@ jwt_key: akjlehyuiAUSDh2
 jwt_live: 30
 ssl_enable: false
 app_domain: localhost
+ip_key: 123

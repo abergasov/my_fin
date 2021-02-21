@@ -6,7 +6,7 @@ import (
 	"my_fin/backend/pkg/logger"
 	"my_fin/backend/pkg/middleware"
 	"my_fin/backend/pkg/repository"
-	"my_fin/backend/pkg/repository/ip_checker"
+	ip_checker "my_fin/backend/pkg/repository/ip_checker"
 	"my_fin/backend/pkg/routes"
 	"net/http"
 
@@ -32,7 +32,7 @@ func main() {
 		UserRepository:       repository.InitUserRepository(dbConnection, appConf.JWTKey, appConf.JWTLive),
 		StatisticsRepository: repository.InitStatisticsRepository(dbConnection),
 		AssetsRepository:     repository.InitAssetsRepository(dbConnection),
-		CountryChecker:       ip_checker.NewPosition(),
+		CountryChecker:       ip_checker.InitIPRegistry(appConf.IPApiKey),
 	}
 
 	logger.Info("Config ok")

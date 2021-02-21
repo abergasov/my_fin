@@ -19,6 +19,7 @@ type AppConfig struct {
 	ProdEnv   bool   `yaml:"prod_env"`
 	AppDomain string `yaml:"app_domain"`
 	SSLEnable bool   `yaml:"ssl_enable"`
+	IPApiKey  string `yaml:"ip_key"`
 }
 
 func InitConf() *AppConfig {

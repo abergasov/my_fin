@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"my_fin/backend/pkg/config"
 	"my_fin/backend/pkg/repository"
-	"my_fin/backend/pkg/repository/ip_checker"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
+
+type ICountryChecker interface {
+	GetMe(ip string) (country, city string)
+}
 
 type AppRouter struct {
 	GinEngine      *gin.Engine
@@ -19,7 +22,7 @@ type AppRouter struct {
 	userRepo       *repository.UserRepository
 	statisticsRepo *repository.StatisticsRepository
 	assetsRepo     *repository.AssetsRepository
-	country        *ip_checker.PositionChecker
+	country        ICountryChecker
 }
 
 type RouterRepoConfig struct {
@@ -28,7 +31,7 @@ type RouterRepoConfig struct {
 	UserRepository       *repository.UserRepository
 	StatisticsRepository *repository.StatisticsRepository
 	AssetsRepository     *repository.AssetsRepository
-	CountryChecker       *ip_checker.PositionChecker
+	CountryChecker       ICountryChecker
 }
 
 func InitRouter(cnf *config.AppConfig, rrC *RouterRepoConfig) *AppRouter {
