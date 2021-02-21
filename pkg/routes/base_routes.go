@@ -65,5 +65,6 @@ func (ar *AppRouter) GetUserCountry(c *gin.Context) {
 		"ok":      true,
 		"city":    city,
 		"country": country,
+		"ip":      c.GetHeader("X-Real-Ip"),
 	})
 }
